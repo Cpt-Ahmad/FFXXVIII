@@ -9,17 +9,16 @@ import de.captain.ffxxviii.states.MainMenu;
 
 public class MainGameClass extends ApplicationAdapter
 {
-    private final SpriteBatch   m_batch         = new SpriteBatch();
-    private final ShapeRenderer m_shapeRenderer = new ShapeRenderer();
+    private SpriteBatch   m_batch;
+    private ShapeRenderer m_shapeRenderer;
 
     private StateStacker m_stateStacker;
 
     @Override
     public void create()
     {
-        // Load assets
-
-        // Set first state
+        m_batch = new SpriteBatch();
+        m_shapeRenderer = new ShapeRenderer();
         m_stateStacker = new StateStacker(new MainMenu(m_batch));
     }
 
@@ -28,7 +27,7 @@ public class MainGameClass extends ApplicationAdapter
     {
         m_stateStacker.update(Gdx.graphics.getDeltaTime());
 
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         m_stateStacker.render(m_batch, m_shapeRenderer);
     }
