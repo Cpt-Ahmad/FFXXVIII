@@ -50,6 +50,11 @@ public class GuiHandler implements Disposable
         return m_table.add(actor);
     }
 
+    public Stage getStage()
+    {
+        return m_stage;
+    }
+
     @Override
     public void dispose()
     {

@@ -5,17 +5,27 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Disposable;
 import de.captain.ffxxviii.gui.GuiHandler;
+import de.captain.ffxxviii.main.StateStacker;
 
 public abstract class State implements Disposable
 {
-    protected final GuiHandler m_guiHandler;
+    protected final SpriteBatch m_batch;
+    protected final ShapeRenderer m_shapeRenderer;
 
-    public State(SpriteBatch batch)
+    protected final GuiHandler m_guiHandler;
+    protected final StateStacker m_stateStacker;
+
+    public State(SpriteBatch batch, ShapeRenderer shapeRenderer, StateStacker stateStacker)
     {
+        m_batch = batch;
+        m_shapeRenderer = shapeRenderer;
+        m_stateStacker = stateStacker;
         m_guiHandler = new GuiHandler(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), batch);
     }
 
     public abstract void update(float delta);
 
-    public abstract void render(SpriteBatch batch, ShapeRenderer shapeRenderer);
+    public abstract void render();
+
+    public abstract void onEnter();
 }

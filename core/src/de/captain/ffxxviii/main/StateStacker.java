@@ -11,11 +11,6 @@ public class StateStacker
 {
     private final Stack<State> m_states = new Stack<State>();
 
-    public StateStacker(State firstState)
-    {
-        m_states.add(firstState);
-    }
-
     public void update(float delta)
     {
         if(m_states.size() != 0)
@@ -24,21 +19,28 @@ public class StateStacker
         }
     }
 
-    public void render(SpriteBatch batch, ShapeRenderer shapeRenderer)
+    public void render()
     {
         if(m_states.size() != 0)
         {
-            m_states.peek().render(batch, shapeRenderer);
+            m_states.peek().render();
         }
     }
 
     public void push(State state)
     {
+        state.onEnter();
         m_states.push(state);
     }
 
     public void pop()
     {
+        if(m_states.empty())
+        {
+            Gdx.app.exit();
+            return;
+        }
+
         m_states.pop().dispose();
         if(m_states.empty())
         {
