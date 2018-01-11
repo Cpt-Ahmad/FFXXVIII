@@ -1,15 +1,27 @@
 package de.captain.ffxxviii.entity.components;
 
-public class RenderPosition
+import com.badlogic.gdx.math.Vector2;
+
+public class RenderPosition implements Component
 {
     /**
      * The position at which to render the entity
      */
     public float x, y;
 
+    public RenderPosition()
+    {
+        this(0f, 0f);
+    }
+
     public RenderPosition(float x, float y)
     {
         set(x, y);
+    }
+
+    public void translate(Vector2 velocity)
+    {
+        translate(velocity.x, velocity.y);
     }
 
     public void translate(float dx, float dy)

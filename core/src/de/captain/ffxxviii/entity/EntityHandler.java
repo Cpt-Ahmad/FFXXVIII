@@ -21,7 +21,7 @@ public class EntityHandler
     {
         for(EntityUpdateSystem system : m_updateSystems)
         {
-            system.update();
+            system.update(m_entities);
         }
     }
 
@@ -29,7 +29,7 @@ public class EntityHandler
     {
         for(EntityRenderSystem system : m_renderSystems)
         {
-            system.render(batch, shapeRenderer);
+            system.render(batch, shapeRenderer, m_entities);
         }
     }
 

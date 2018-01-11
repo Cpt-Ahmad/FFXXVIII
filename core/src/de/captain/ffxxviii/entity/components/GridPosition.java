@@ -1,13 +1,18 @@
 package de.captain.ffxxviii.entity.components;
 
-public class MapPosition
+public class GridPosition implements Component
 {
     /**
      * The position of the entity on the map (grid based)
      */
     public int x, y;
 
-    public MapPosition(int x, int y)
+    public GridPosition()
+    {
+        this(0, 0);
+    }
+
+    public GridPosition(int x, int y)
     {
         set(x, y);
     }

@@ -23,6 +23,7 @@ public class MainGameClass extends ApplicationAdapter
         m_batch = new SpriteBatch();
         m_shapeRenderer = new ShapeRenderer();
         m_stateStacker = new StateStacker();
+
         m_stateStacker.push(new MainMenuState(m_batch, m_shapeRenderer, m_stateStacker));
     }
 

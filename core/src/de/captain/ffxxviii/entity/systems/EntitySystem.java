@@ -4,9 +4,13 @@ public abstract class EntitySystem
 {
     public enum EntitySystemType
     {
+        MOVEMENT(1, true),
+
+        /* */
+
         ;
 
-        public final int priority;
+        public final int     priority;
         public final boolean isUpdateSystem;
 
         EntitySystemType(int priority, boolean isUpdateSystem)
