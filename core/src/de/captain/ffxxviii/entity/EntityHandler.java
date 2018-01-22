@@ -3,11 +3,13 @@ package de.captain.ffxxviii.entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.sun.istack.internal.NotNull;
 import de.captain.ffxxviii.entity.systems.EntityRenderSystem;
 import de.captain.ffxxviii.entity.systems.EntitySystem;
 import de.captain.ffxxviii.entity.systems.EntityUpdateSystem;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,8 +35,13 @@ public class EntityHandler
         }
     }
 
-    public void addEntity(Entity entity)
+    public void addEntity(@NotNull Entity entity)
     {
+        if(entity == null)
+        {
+            throw new IllegalArgumentException("Entity should not be null");
+        }
+
         if(!m_entities.contains(entity))
         {
             m_entities.add(entity);
@@ -46,8 +53,13 @@ public class EntityHandler
         m_entities.remove(entity);
     }
 
-    public void addSystem(EntitySystem system)
+    public void addSystem(@NotNull EntitySystem system)
     {
+        if(system == null)
+        {
+            throw new IllegalArgumentException("Entity system should not be null");
+        }
+
         if(system.entitySystemType.isUpdateSystem)
         {
             int index = getIndexForRightPriority(system.entitySystemType, m_updateSystems);
@@ -82,7 +94,7 @@ public class EntityHandler
         }
     }
 
-    private int getIndexForRightPriority(EntitySystem.EntitySystemType type, List<? extends EntitySystem> list)
+    private int getIndexForRightPriority(EntitySystem.EntitySystemType type, @NotNull List<? extends EntitySystem> list)
     {
         int index = -1;
         for(int i = 0; i < list.size(); i++)
@@ -92,11 +104,19 @@ public class EntityHandler
             {
                 return -1;
             }
-            if(index == -1 && existingType.priority < type.priority)
+            if(index == -1 && existingType.priority > type.priority)
             {
                 index = i;
             }
         }
         return index == -1 ? list.size() : index;
+    }
+
+    public void addEntities(Collection<Entity> entities)
+    {
+        for(Entity entity : entities)
+        {
+            addEntity(entity);
+        }
     }
 }

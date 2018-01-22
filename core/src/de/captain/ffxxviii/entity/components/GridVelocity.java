@@ -1,8 +1,7 @@
 package de.captain.ffxxviii.entity.components;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import de.captain.ffxxviii.states.IngameState;
+import de.captain.ffxxviii.states.Ingame;
 
 /**
  * Component for moving entities inside of a grid map.
@@ -14,6 +13,7 @@ public class GridVelocity implements Component
     public enum Direction
     {
         NONE,
+        MOVING,
         UP,
         DOWN,
         LEFT,
@@ -48,7 +48,7 @@ public class GridVelocity implements Component
         }
 
         m_maxTicksForMovement = maxTicksForMovement;
-        m_movementSpeed = ((float) IngameState.TILE_SIZE) / ((float) maxTicksForMovement);
+        m_movementSpeed = ((float) Ingame.TILE_SIZE) / ((float) maxTicksForMovement);
     }
 
     /**
@@ -85,6 +85,11 @@ public class GridVelocity implements Component
             return false;
         }
 
+        if(direction == Direction.MOVING)
+        {
+            throw new IllegalArgumentException("The direction cannot be set to MOVING");
+        }
+
         m_direction = direction;
         return true;
     }
@@ -92,13 +97,17 @@ public class GridVelocity implements Component
     /**
      * Increases the movement tick counter, locks the component and checks whether or not the movement is done.
      * This should be called before changing the applying the velocity, as it will set the vector according to the
-     * current direction. Additionally, this should only be called, after a direction was set, otherwise the entity
-     * will stay in place for the duration of the tick counter.
+     * current direction.
      *
-     * @return True if the movement is done, false otherwise
+     * @return the direction of the current movement when it is finished, otherwise NONE
      */
-    public boolean move()
+    public Direction move()
     {
+        if(m_direction == Direction.NONE)
+        {
+            return Direction.NONE;
+        }
+
         if (!m_isLocked)
         {
             m_isLocked = true;
@@ -122,13 +131,15 @@ public class GridVelocity implements Component
         m_ticksMoving++;
         if (m_ticksMoving == m_maxTicksForMovement)
         {
+            Direction tmp = m_direction;
+
             m_ticksMoving = 0;
             m_velocity.set(0f, 0f);
             m_direction = Direction.NONE;
             m_isLocked = false;
-            return true;
+            return tmp;
         }
-        return false;
+        return Direction.MOVING;
     }
 
     public void cancelMovement()
@@ -137,11 +148,6 @@ public class GridVelocity implements Component
         {
             m_direction = Direction.NONE;
         }
-    }
-
-    public boolean isReadyToStartMovement()
-    {
-        return (m_direction != Direction.NONE && !m_isLocked);
     }
 
     public Direction getDirection()

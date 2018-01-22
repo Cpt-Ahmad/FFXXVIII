@@ -1,0 +1,9 @@
+stone:
+  name: Stone
+  value: 5
+wood:
+  name: Wood
+  value: 10
+iron:
+  name: Iron
+  value: 50

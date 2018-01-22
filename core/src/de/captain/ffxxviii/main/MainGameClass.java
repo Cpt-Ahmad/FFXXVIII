@@ -6,10 +6,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import de.captain.ffxxviii.states.MainMenuState;
+import de.captain.ffxxviii.items.Item;
+import de.captain.ffxxviii.states.MainMenu;
+import de.captain.ffxxviii.util.Testing;
 
 public class MainGameClass extends ApplicationAdapter
 {
+    private int m_ticksForFpsPrinting = 0;
+
     private SpriteBatch   m_batch;
     private ShapeRenderer m_shapeRenderer;
 
@@ -20,16 +24,28 @@ public class MainGameClass extends ApplicationAdapter
     {
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
+        Testing.get().test();
+
         m_batch = new SpriteBatch();
         m_shapeRenderer = new ShapeRenderer();
         m_stateStacker = new StateStacker();
 
-        m_stateStacker.push(new MainMenuState(m_batch, m_shapeRenderer, m_stateStacker));
+        Assets.getAssets().init();
+        Item.init();
+
+        m_stateStacker.push(new MainMenu(m_batch, m_shapeRenderer, m_stateStacker));
     }
 
     @Override
     public void render()
     {
+        m_ticksForFpsPrinting++;
+        if(m_ticksForFpsPrinting == 60)
+        {
+            m_ticksForFpsPrinting = 0;
+            Gdx.app.debug("Fps", Gdx.graphics.getFramesPerSecond() + "");
+        }
+
         m_stateStacker.update(Gdx.graphics.getDeltaTime());
 
         Gdx.gl.glClearColor(0, 0, 0, 1);

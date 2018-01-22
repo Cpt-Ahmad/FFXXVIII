@@ -4,10 +4,12 @@ public abstract class EntitySystem
 {
     public enum EntitySystemType
     {
-        MOVEMENT(1, true),
+        MOVEMENT(2, true),
+        COLLISION(1, true),
 
         /* */
 
+        TEXTURE_RENDERER(1, false),
         ;
 
         public final int     priority;

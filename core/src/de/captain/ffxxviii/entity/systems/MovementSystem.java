@@ -1,12 +1,10 @@
 package de.captain.ffxxviii.entity.systems;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import de.captain.ffxxviii.entity.Entity;
 import de.captain.ffxxviii.entity.components.GridPosition;
 import de.captain.ffxxviii.entity.components.GridVelocity;
 import de.captain.ffxxviii.entity.components.RenderPosition;
-import de.captain.ffxxviii.states.IngameState;
+import de.captain.ffxxviii.states.Ingame;
 
 import java.util.List;
 
@@ -35,11 +33,13 @@ public class MovementSystem extends EntityUpdateSystem
                 continue;
             }
 
-            if(gridVel.isReadyToStartMovement())
+            GridVelocity.Direction direction = gridVel.move();
+            if(direction == GridVelocity.Direction.MOVING)
             {
-                // TODO add collision checks here
-
-                switch(gridVel.getDirection())
+                renderPos.translate(gridVel.getVelocity());
+            } else if(direction != GridVelocity.Direction.NONE)
+            {
+                switch(direction)
                 {
                     case UP:
                         gridPos.y++;
@@ -54,14 +54,7 @@ public class MovementSystem extends EntityUpdateSystem
                         gridPos.x++;
                         break;
                 }
-            }
-
-            if(gridVel.move())
-            {
-                renderPos.set(gridPos.x * IngameState.TILE_SIZE, gridPos.y * IngameState.TILE_SIZE);
-            } else
-            {
-                renderPos.translate(gridVel.getVelocity());
+                renderPos.set(gridPos.x * Ingame.TILE_SIZE, gridPos.y * Ingame.TILE_SIZE);
             }
         }
     }

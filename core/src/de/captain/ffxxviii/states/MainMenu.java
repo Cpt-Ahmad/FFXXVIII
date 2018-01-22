@@ -5,15 +5,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import de.captain.ffxxviii.main.StateStacker;
 
-import javax.swing.event.ChangeEvent;
-
-public class MainMenuState extends State
+public class MainMenu extends State
 {
 
-    public MainMenuState(SpriteBatch batch, ShapeRenderer shapeRenderer, StateStacker stateStacker)
+    public MainMenu(SpriteBatch batch, ShapeRenderer shapeRenderer, StateStacker stateStacker)
     {
         super(batch, shapeRenderer, stateStacker);
     }
@@ -28,7 +25,7 @@ public class MainMenuState extends State
             {
                 Gdx.app.debug("State", "Null");
             }
-            m_stateStacker.push(new IngameState(m_batch, m_shapeRenderer, m_stateStacker));
+            m_stateStacker.push(new Ingame(m_batch, m_shapeRenderer, m_stateStacker));
         }
     }
 

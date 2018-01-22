@@ -7,7 +7,7 @@ import de.captain.ffxxviii.entity.Entity;
 import de.captain.ffxxviii.entity.components.GridPosition;
 import de.captain.ffxxviii.entity.components.RenderPosition;
 import de.captain.ffxxviii.entity.components.TextureContainer;
-import de.captain.ffxxviii.states.IngameState;
+import de.captain.ffxxviii.states.Ingame;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class TextureRenderer extends EntityRenderSystem{
             if(textureContainer != null && renderPosition != null){
                 batch.draw(textureContainer.texture, renderPosition.x,renderPosition.y);
             } else if(textureContainer != null && gridPosition != null){
-                batch.draw(textureContainer.texture, gridPosition.x* IngameState.TILE_SIZE, gridPosition.y*IngameState.TILE_SIZE);
+                batch.draw(textureContainer.texture, gridPosition.x * Ingame.TILE_SIZE, gridPosition.y * Ingame.TILE_SIZE);
             }
 
         }
