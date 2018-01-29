@@ -1,10 +1,10 @@
 package de.captain.ffxxviii.main;
 
 import com.badlogic.gdx.Gdx;
-import de.captain.ffxxviii.items.Item;
-import de.captain.ffxxviii.items.components.ItemComponent;
-import de.captain.ffxxviii.items.components.Name;
-import de.captain.ffxxviii.items.components.Value;
+import de.captain.ffxxviii.item.Item;
+import de.captain.ffxxviii.item.components.ItemComponent;
+import de.captain.ffxxviii.item.components.Recipe;
+import de.captain.ffxxviii.util.Log;
 import org.yaml.snakeyaml.Yaml;
 
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ public final class IOHelper
 {
     public static void loadItems(String filename)
     {
-        Yaml yaml = new Yaml();
+        Yaml             yaml     = new Yaml();
         Map<String, Map> itemData = yaml.load(Gdx.files.internal(filename).readString());
-        for(String key : itemData.keySet())
+        for (String key : itemData.keySet())
         {
             Map itemProperties = itemData.get(key);
             evaluateItemProperties(key, itemProperties);
@@ -28,28 +28,45 @@ public final class IOHelper
     private static void evaluateItemProperties(String key, Map itemProperties)
     {
         List<ItemComponent> components = new ArrayList<>();
-        String name = null;
-        int value = 1;
+        String              name       = null;
+        String              type       = null;
+        int                 value      = 1;
 
-        for(Object keyObject : itemProperties.keySet())
+        for (Object keyObject : itemProperties.keySet())
         {
             String property = (String) keyObject;
 
-            switch(property)
+            switch (property)
             {
                 case "name":
-                    name = (String)itemProperties.get(property);
+                    name = (String) itemProperties.get(property);
                     break;
                 case "value":
-                    value = (Integer)itemProperties.get(property);
+                    value = (Integer) itemProperties.get(property);
+                    break;
+                case "type":
+                    type = (String) itemProperties.get(property);
+                    break;
+                case "recipe":
+                    Map recipeProperty = (Map) itemProperties.get(property);
+                    Map itemsReq = (Map) recipeProperty.get("item-req");
+                    components.add(new Recipe(itemsReq));
+                    break;
+                default:
+                    Log.log(Log.Logger.ITEM, "The item property \"" + property + "\" does not exist");
+                    break;
             }
         }
 
-        if(name == null)
+        if (name == null)
         {
             throw new MissingResourceException("Item name missing", "String", "name");
         }
+        if (type == null)
+        {
+            throw new MissingResourceException("Item type missing", "String", "type");
+        }
 
-        new Item(key, name, value, components);
+        new Item(key, name, value, type, components);
     }
 }

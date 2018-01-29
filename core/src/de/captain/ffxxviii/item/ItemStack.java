@@ -1,6 +1,4 @@
-package de.captain.ffxxviii.items.components;
-
-import de.captain.ffxxviii.items.Item;
+package de.captain.ffxxviii.item;
 
 public class ItemStack
 {
@@ -41,9 +39,9 @@ public class ItemStack
     }
 
     /**
-     * Adds the given number to the item stack counter. The item stack cannot exceed a total count of 1,000,000 items.
+     * Adds the given number to the item stack counter. The item stack cannot exceed a total count of 1,000,000 item.
      *
-     * @param x the number of items to add to the item stack
+     * @param x the number of item to add to the item stack
      */
     public void add(int x)
     {
@@ -57,9 +55,9 @@ public class ItemStack
     }
 
     /**
-     * Removes the given number from the item stack counter. The item stack cannot go below a counter of 0 items.
+     * Removes the given number from the item stack counter. The item stack cannot go below a counter of 0 item.
      *
-     * @param x the number of items to remove
+     * @param x the number of item to remove
      * @return true if the stack is empty, eg. the count reaches 0, false otherwise
      */
     public boolean remove(int x)

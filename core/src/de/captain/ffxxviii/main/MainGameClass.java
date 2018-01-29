@@ -6,9 +6,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import de.captain.ffxxviii.items.Item;
+import de.captain.ffxxviii.item.Item;
 import de.captain.ffxxviii.states.MainMenu;
+import de.captain.ffxxviii.util.Log;
 import de.captain.ffxxviii.util.Testing;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainGameClass extends ApplicationAdapter
 {
@@ -25,6 +29,10 @@ public class MainGameClass extends ApplicationAdapter
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
 
         Testing.get().test();
+        List<Log.Logger> logList = new ArrayList<>();
+        logList.add(Log.Logger.BATTLE);
+        logList.add(Log.Logger.ITEM);
+        Log.setLogList(logList);
 
         m_batch = new SpriteBatch();
         m_shapeRenderer = new ShapeRenderer();
@@ -39,12 +47,17 @@ public class MainGameClass extends ApplicationAdapter
     @Override
     public void render()
     {
-        m_ticksForFpsPrinting++;
-        if(m_ticksForFpsPrinting == 60)
+        if (Debug.FPS_OUTPUT_IN_CONSOLE)
         {
-            m_ticksForFpsPrinting = 0;
-            Gdx.app.debug("Fps", Gdx.graphics.getFramesPerSecond() + "");
+            m_ticksForFpsPrinting++;
+            if (m_ticksForFpsPrinting == 60)
+            {
+                m_ticksForFpsPrinting = 0;
+                Gdx.app.debug("Fps", Gdx.graphics.getFramesPerSecond() + "");
+            }
         }
+
+        Testing.get().test();
 
         m_stateStacker.update(Gdx.graphics.getDeltaTime());
 
@@ -58,5 +71,6 @@ public class MainGameClass extends ApplicationAdapter
     {
         m_batch.dispose();
         m_shapeRenderer.dispose();
+        // TODO add assets dispose method
     }
 }

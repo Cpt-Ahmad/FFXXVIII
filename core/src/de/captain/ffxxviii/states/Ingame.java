@@ -12,13 +12,17 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import de.captain.ffxxviii.entity.Entity;
 import de.captain.ffxxviii.entity.EntityHandler;
-import de.captain.ffxxviii.entity.components.*;
+import de.captain.ffxxviii.entity.components.Dimension;
+import de.captain.ffxxviii.entity.components.GridVelocity;
+import de.captain.ffxxviii.entity.components.PlayerTeam;
+import de.captain.ffxxviii.entity.components.RenderPosition;
+import de.captain.ffxxviii.entity.presets.Player;
 import de.captain.ffxxviii.entity.systems.CollisionSystem;
 import de.captain.ffxxviii.entity.systems.MovementSystem;
 import de.captain.ffxxviii.entity.systems.TextureRenderer;
-import de.captain.ffxxviii.main.Asset;
-import de.captain.ffxxviii.main.Assets;
 import de.captain.ffxxviii.main.StateStacker;
+
+import java.util.List;
 
 public class Ingame extends State
 {
@@ -43,16 +47,10 @@ public class Ingame extends State
         m_entityHandler.addSystem(new MovementSystem());
         m_entityHandler.addSystem(new TextureRenderer());
 
-        // DEBUG
-        m_player = new Entity();
-        TextureContainer texCon = new TextureContainer(Assets.getAssets().getTexture(Asset.TEST));
-        GridPosition gridPos = new GridPosition();
-        GridVelocity gridVel = new GridVelocity(30);
-        RenderPosition renderPos = new RenderPosition();
-        Dimension dim = new Dimension(texCon.texture.getWidth(), texCon.texture.getHeight());
-        m_player.addComponents(gridPos, gridVel, renderPos, dim, texCon);
-
+        m_player = new Player();
         m_entityHandler.addEntity(m_player);
+        //m_entityHandler.addEntity(new PlayerTeamMember(true));
+        //m_entityHandler.addEntity(new PlayerTeamMember(false));
 
         loadMap("world01.tmx");
     }
@@ -136,6 +134,10 @@ public class Ingame extends State
             {
                 m_stateStacker.pop();
                 return true;
+            } else if(keycode == Input.Keys.B)
+            {
+                List<Entity> playerTeam = m_entityHandler.getEntities(PlayerTeam.class);
+                m_stateStacker.push(new Battle(m_batch, m_shapeRenderer, m_stateStacker, playerTeam));
             }
 
             return false;

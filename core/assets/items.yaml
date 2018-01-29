@@ -1,9 +1,19 @@
-stone:
-  name: Stone
-  value: 5
+# items
 wood:
   name: Wood
   value: 10
+  type: resource
+stone:
+  name: Stone
+  value: 5
+  type: resource
 iron:
   name: Iron
-  value: 50
+  value: 20
+  type: resource
+iron-sword:
+  name: Iron Sword
+  value: 300
+  type: weapon
+  recipe:
+    item-req: {iron: 10}

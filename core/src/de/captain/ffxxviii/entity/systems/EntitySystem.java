@@ -6,6 +6,7 @@ public abstract class EntitySystem
     {
         MOVEMENT(2, true),
         COLLISION(1, true),
+        BATTLE(1, true),
 
         /* */
 

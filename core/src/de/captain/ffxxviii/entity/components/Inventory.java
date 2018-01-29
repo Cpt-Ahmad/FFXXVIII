@@ -1,7 +1,8 @@
 package de.captain.ffxxviii.entity.components;
 
-import de.captain.ffxxviii.items.Item;
-import de.captain.ffxxviii.items.components.ItemStack;
+import de.captain.ffxxviii.item.Item;
+import de.captain.ffxxviii.item.ItemStack;
+import de.captain.ffxxviii.item.components.Recipe;
 
 import java.util.*;
 
@@ -27,10 +28,10 @@ public class Inventory implements Component
     }
 
     /**
-     * Adds all items from the given inventory to this inventory. It does not remove the items added to the inventory
+     * Adds all item from the given inventory to this inventory. It does not remove the item added to the inventory
      * from the other inventory.
      *
-     * @param inventory the inventory to take the items from
+     * @param inventory the inventory to take the item from
      */
     public void add(Inventory inventory)
     {
@@ -44,7 +45,7 @@ public class Inventory implements Component
      */
     public void add(Collection<ItemStack> collection)
     {
-        for(ItemStack stack : collection)
+        for (ItemStack stack : collection)
         {
             add(stack);
         }
@@ -63,19 +64,19 @@ public class Inventory implements Component
     /**
      * Adds the item to the inventory with the given count
      *
-     * @param item the item to add
+     * @param item  the item to add
      * @param count the count of the item added
      */
     public void add(Item item, int count)
     {
-        if(item == null)
+        if (item == null)
         {
             throw new IllegalArgumentException("The item added to the inventory cannot be null");
         }
 
-        for(ItemStack stack : m_itemStacks)
+        for (ItemStack stack : m_itemStacks)
         {
-            if(stack.item.equals(item))
+            if (stack.item.equals(item))
             {
                 stack.add(count);
                 return;
@@ -85,19 +86,37 @@ public class Inventory implements Component
     }
 
     /**
+     * Checks if all items for the specified recipe in the right quantity are in the inventory.
+     *
+     * @param recipe the recipe to check
+     * @return true if all items in the right quantity are in the inventory, false otherwise
+     */
+    public boolean hasEnoughForRecipe(Recipe recipe)
+    {
+        for (Recipe.UnmodifiableItemStack stack : recipe.itemReq)
+        {
+            if (!hasEnoughtOfItem(stack.item, stack.count))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Checks if the there are enough of one item in the inventory.
      *
      * @param item the item to check
-     * @param x the required count
+     * @param x    the required count
      * @return true if there are enough of this item, false otherwise
      */
     public boolean hasEnoughtOfItem(Item item, int x)
     {
-        for(ItemStack stack : m_itemStacks)
+        for (ItemStack stack : m_itemStacks)
         {
-            if(stack.item.equals(item))
+            if (stack.item.equals(item))
             {
-                if(stack.count >= x)
+                if (stack.count >= x)
                 {
                     return true;
                 }
@@ -107,13 +126,13 @@ public class Inventory implements Component
     }
 
     /**
-     * Removes the specified number of items from the inventory
+     * Removes the specified number of item from the inventory
      *
-     * @param stacks the items and counts to remove
+     * @param stacks the item and counts to remove
      */
     public void removeItems(List<ItemStack> stacks)
     {
-        for(ItemStack stack : stacks)
+        for (ItemStack stack : stacks)
         {
             removeItem(stack.item, stack.count);
         }
@@ -123,16 +142,16 @@ public class Inventory implements Component
      * Removes one specified item the given amount from the inventory
      *
      * @param item the item to remove
-     * @param x the count
+     * @param x    the count
      */
     public void removeItem(Item item, int x)
     {
-        for(Iterator<ItemStack> iter = m_itemStacks.iterator(); iter.hasNext();)
+        for (Iterator<ItemStack> iter = m_itemStacks.iterator(); iter.hasNext(); )
         {
             ItemStack stack = iter.next();
-            if(stack.item.equals(item))
+            if (stack.item.equals(item))
             {
-                if(stack.remove(x))
+                if (stack.remove(x))
                 {
                     iter.remove();
                     return;
