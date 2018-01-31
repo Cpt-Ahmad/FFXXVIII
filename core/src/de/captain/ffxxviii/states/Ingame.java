@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -12,10 +11,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import de.captain.ffxxviii.entity.Entity;
 import de.captain.ffxxviii.entity.EntityHandler;
-import de.captain.ffxxviii.entity.components.Dimension;
-import de.captain.ffxxviii.entity.components.GridVelocity;
-import de.captain.ffxxviii.entity.components.PlayerTeam;
-import de.captain.ffxxviii.entity.components.RenderPosition;
+import de.captain.ffxxviii.entity.components.*;
 import de.captain.ffxxviii.entity.presets.Player;
 import de.captain.ffxxviii.entity.systems.CollisionSystem;
 import de.captain.ffxxviii.entity.systems.MovementSystem;
@@ -30,7 +26,6 @@ public class Ingame extends State
 
     private TiledMap                   m_world;
     private OrthogonalTiledMapRenderer m_worldRenderer;
-    private OrthographicCamera         m_camera;
 
     private Entity m_player;
 
@@ -39,9 +34,6 @@ public class Ingame extends State
     public Ingame(SpriteBatch m_batch, ShapeRenderer m_shapeRenderer, StateStacker m_stateStacker)
     {
         super(m_batch, m_shapeRenderer, m_stateStacker);
-
-        m_camera = new OrthographicCamera();
-        m_camera.setToOrtho(false, Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
 
         m_entityHandler.addSystem(new CollisionSystem());
         m_entityHandler.addSystem(new MovementSystem());
@@ -79,8 +71,8 @@ public class Ingame extends State
         m_entityHandler.update();
 
         RenderPosition renderPos = m_player.getComponent(RenderPosition.class);
-        Dimension dim = m_player.getComponent(Dimension.class);
-        if(renderPos != null && dim != null)
+        Dimension      dim       = m_player.getComponent(Dimension.class);
+        if (renderPos != null && dim != null)
         {
             m_camera.position.set(renderPos.x + dim.width / 2f, renderPos.y + dim.height / 2f, 0f);
         }
@@ -104,6 +96,17 @@ public class Ingame extends State
     public void onEnter()
     {
         Gdx.input.setInputProcessor(new InputMultiplexer(m_guiHandler.getStage(), new IngameInputProcessor()));
+        for (Entity entity : m_entityHandler.getEntityList())
+        {
+            GridPosition   gridPos   = entity.getComponent(GridPosition.class);
+            RenderPosition renderPos = entity.getComponent(RenderPosition.class);
+
+            if (gridPos == null || renderPos == null)
+            {
+                continue;
+            }
+            renderPos.set(gridPos.x * TILE_SIZE, gridPos.y * TILE_SIZE);
+        }
     }
 
     @Override
@@ -134,10 +137,10 @@ public class Ingame extends State
             {
                 m_stateStacker.pop();
                 return true;
-            } else if(keycode == Input.Keys.B)
+            } else if (keycode == Input.Keys.B)
             {
                 List<Entity> playerTeam = m_entityHandler.getEntities(PlayerTeam.class);
-                m_stateStacker.push(new Battle(m_batch, m_shapeRenderer, m_stateStacker, playerTeam));
+                m_stateStacker.push(new Battle(m_batch, m_shapeRenderer, m_stateStacker, playerTeam, m_player));
             }
 
             return false;

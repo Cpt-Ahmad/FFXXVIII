@@ -10,6 +10,7 @@ public class CombatInfo implements Component
 
     public int maxHealth, health;
     public int staminaPerSec = 5, stamina = 0;
+    public int experiencePoints;
     public int battlefieldPosition = -1;
 
     private Attack nextAttack = new Attack();

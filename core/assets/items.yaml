@@ -15,5 +15,16 @@ iron-sword:
   name: Iron Sword
   value: 300
   type: weapon
+  weapon-type: melee
+  stats:
+    attack-value: 10
+    element: none
   recipe:
     item-req: {iron: 10}
+healing-potion-1:
+  name: Healing Potion I
+  value: 50
+  type: potion
+  stats:
+    attack-value: -200
+    element: heal
