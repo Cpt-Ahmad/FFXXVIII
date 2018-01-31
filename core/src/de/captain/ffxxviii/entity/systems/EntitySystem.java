@@ -11,7 +11,8 @@ public abstract class EntitySystem
         /* */
 
         TEXTURE_RENDERER(1, false),
-        ;
+        MAP_GRID_RENDERER(2, false);
+
 
         public final int     priority;
         public final boolean isUpdateSystem;
