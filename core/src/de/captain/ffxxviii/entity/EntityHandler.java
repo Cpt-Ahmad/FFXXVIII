@@ -19,6 +19,10 @@ public class EntityHandler
     private List<EntityUpdateSystem> m_updateSystems = new ArrayList<>();
     private List<EntityRenderSystem> m_renderSystems = new ArrayList<>();
 
+    public EntityHandler()
+    {
+    }
+
     public void update()
     {
         for (EntityUpdateSystem system : m_updateSystems)
@@ -146,6 +150,11 @@ public class EntityHandler
         }
 
         return entities;
+    }
+
+    public List<Entity> getEntityList()
+    {
+        return m_entities;
     }
 
     public int size()

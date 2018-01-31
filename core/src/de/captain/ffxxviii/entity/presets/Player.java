@@ -19,7 +19,8 @@ public class Player extends Entity
         PlayerTeam playerTeam = new PlayerTeam();
         CombatInfo cInfo = new CombatInfo(true, 5000);
         Name name = new Name("Player");
+        Inventory inv = new Inventory();
 
-        addComponents(gridPos, gridVel, renderPos, dim, texCon, playerTeam, cInfo, name);
+        addComponents(gridPos, gridVel, renderPos, dim, texCon, playerTeam, cInfo, name, inv);
     }
 }

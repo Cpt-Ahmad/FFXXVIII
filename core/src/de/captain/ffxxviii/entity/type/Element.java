@@ -6,5 +6,6 @@ public enum Element
     FIRE,
     ICE,
     THUNDER,
+    HEAL,
     ;
 }

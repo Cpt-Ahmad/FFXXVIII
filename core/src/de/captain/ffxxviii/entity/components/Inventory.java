@@ -159,4 +159,25 @@ public class Inventory implements Component
             }
         }
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder("[");
+        for (Iterator<ItemStack> iterator = m_itemStacks.iterator(); iterator.hasNext(); )
+        {
+            ItemStack stack = iterator.next();
+            sb.append("(");
+            sb.append(stack.item.name);
+            sb.append(", ");
+            sb.append(stack.count);
+            sb.append(")");
+            if (iterator.hasNext())
+            {
+                sb.append(", ");
+            }
+        }
+        sb.append("]");
+        return sb.toString();
+    }
 }
