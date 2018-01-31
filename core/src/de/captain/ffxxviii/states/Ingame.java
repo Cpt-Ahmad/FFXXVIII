@@ -44,7 +44,7 @@ public class Ingame extends State
         //m_entityHandler.addEntity(new PlayerTeamMember(true));
         //m_entityHandler.addEntity(new PlayerTeamMember(false));
 
-        loadMap("world01.tmx");
+        loadMap("Test_Map.tmx");
     }
 
     @Override
