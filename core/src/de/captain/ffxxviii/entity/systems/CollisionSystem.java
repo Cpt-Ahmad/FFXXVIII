@@ -1,10 +1,10 @@
 package de.captain.ffxxviii.entity.systems;
 
-import com.badlogic.gdx.Gdx;
 import de.captain.ffxxviii.entity.Entity;
 import de.captain.ffxxviii.entity.components.GridPosition;
 import de.captain.ffxxviii.entity.components.GridVelocity;
 import de.captain.ffxxviii.entity.components.TileInfo;
+import de.captain.ffxxviii.main.WorldMap;
 
 import java.util.List;
 
@@ -53,20 +53,27 @@ public class CollisionSystem extends EntityUpdateSystem
                     continue;
             }
 
-            for (Entity blockingEntity : entities)
+            if (posAfterMoving.x >= 0 && posAfterMoving.x < WorldMap.getMapWidth() && posAfterMoving.y >= 0 &&
+                posAfterMoving.y < WorldMap.getMapHeight())
             {
-                posBlocker = blockingEntity.getComponent(GridPosition.class);
-                tile = blockingEntity.getComponent(TileInfo.class);
-
-                if (posBlocker == null || tile == null)
+                for (Entity blockingEntity : entities)
                 {
-                    continue;
-                }
+                    posBlocker = blockingEntity.getComponent(GridPosition.class);
+                    tile = blockingEntity.getComponent(TileInfo.class);
 
-                if (tile.type == TileInfo.TileInfoType.BLOCKED && posAfterMoving.equals(posBlocker))
-                {
-                    velMoving.cancelMovement();
+                    if (posBlocker == null || tile == null)
+                    {
+                        continue;
+                    }
+
+                    if (tile.type == TileInfo.TileInfoType.BLOCKED && posAfterMoving.equals(posBlocker))
+                    {
+                        velMoving.cancelMovement();
+                    }
                 }
+            } else
+            {
+                velMoving.cancelMovement();
             }
         }
     }

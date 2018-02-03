@@ -1,8 +1,6 @@
 package de.captain.ffxxviii.main;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import de.captain.ffxxviii.states.State;
 
 import java.util.Stack;
@@ -46,5 +44,6 @@ public class StateStacker
         {
             Gdx.app.exit();
         }
+        m_states.peek().onEnter();
     }
 }

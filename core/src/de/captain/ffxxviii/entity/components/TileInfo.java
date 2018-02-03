@@ -4,8 +4,26 @@ public class TileInfo implements Component
 {
     public enum TileInfoType
     {
-        BLOCKED,
-        ;
+        BLOCKED(0);
+
+        public final int id;
+
+        TileInfoType(int id)
+        {
+            this.id = id;
+        }
+
+        public static TileInfoType get(int id)
+        {
+            for(TileInfoType type : values())
+            {
+                if(type.id == id)
+                {
+                    return type;
+                }
+            }
+            return null;
+        }
     }
 
     public final TileInfoType type;

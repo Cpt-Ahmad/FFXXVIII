@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import de.captain.ffxxviii.entity.Entity;
 import de.captain.ffxxviii.entity.EntityHandler;
 import de.captain.ffxxviii.entity.components.*;
-import de.captain.ffxxviii.entity.presets.BattleArrow;
 import de.captain.ffxxviii.entity.presets.Goblin;
+import de.captain.ffxxviii.entity.presets.SelectionArrow;
 import de.captain.ffxxviii.entity.systems.TextureRenderer;
 import de.captain.ffxxviii.entity.type.AttackType;
 import de.captain.ffxxviii.main.StateStacker;
@@ -70,7 +70,7 @@ public class Battle extends State
 
         m_enemyCounter = 2;
 
-        m_arrow = new BattleArrow();
+        m_arrow = new SelectionArrow();
         m_entityHandler.addEntity(m_arrow);
         m_entityHandler.addEntities(playerTeam);
         m_entityHandler.addEntities(createEnemyTeam(m_enemyCounter));

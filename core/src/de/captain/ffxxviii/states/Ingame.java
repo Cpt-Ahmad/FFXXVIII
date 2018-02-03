@@ -6,45 +6,41 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import de.captain.ffxxviii.entity.Entity;
 import de.captain.ffxxviii.entity.EntityHandler;
 import de.captain.ffxxviii.entity.components.*;
 import de.captain.ffxxviii.entity.presets.Player;
 import de.captain.ffxxviii.entity.systems.CollisionSystem;
+import de.captain.ffxxviii.entity.systems.MapGridRenderer;
 import de.captain.ffxxviii.entity.systems.MovementSystem;
 import de.captain.ffxxviii.entity.systems.TextureRenderer;
 import de.captain.ffxxviii.main.StateStacker;
+import de.captain.ffxxviii.main.WorldMap;
 
 import java.util.List;
 
 public class Ingame extends State
 {
-    public static final int TILE_SIZE = 32;
-
-    private TiledMap                   m_world;
-    private OrthogonalTiledMapRenderer m_worldRenderer;
+    private final WorldMap m_world;
 
     private Entity m_player;
 
     private final EntityHandler m_entityHandler = new EntityHandler();
 
-    public Ingame(SpriteBatch m_batch, ShapeRenderer m_shapeRenderer, StateStacker m_stateStacker)
+    Ingame(SpriteBatch batch, ShapeRenderer shapeRenderer, StateStacker stateStacker)
     {
-        super(m_batch, m_shapeRenderer, m_stateStacker);
+        super(batch, shapeRenderer, stateStacker);
+
+        m_world = new WorldMap(batch);
+        m_world.loadMap("maps/test-map.tmx", m_entityHandler.getEntityList());
 
         m_entityHandler.addSystem(new CollisionSystem());
         m_entityHandler.addSystem(new MovementSystem());
         m_entityHandler.addSystem(new TextureRenderer());
+        m_entityHandler.addSystem(new MapGridRenderer(m_world));
 
         m_player = new Player();
         m_entityHandler.addEntity(m_player);
-        //m_entityHandler.addEntity(new PlayerTeamMember(true));
-        //m_entityHandler.addEntity(new PlayerTeamMember(false));
-
-        loadMap("Test_Map.tmx");
     }
 
     @Override
@@ -78,7 +74,7 @@ public class Ingame extends State
         }
 
         m_camera.update();
-        m_worldRenderer.setView(m_camera);
+        m_world.update(m_camera);
     }
 
     @Override
@@ -87,7 +83,7 @@ public class Ingame extends State
         m_batch.setProjectionMatrix(m_camera.combined);
         m_shapeRenderer.setProjectionMatrix(m_camera.combined);
 
-        m_worldRenderer.render();
+        m_world.render();
         m_entityHandler.render(m_batch, m_shapeRenderer);
         m_guiHandler.render();
     }
@@ -105,7 +101,7 @@ public class Ingame extends State
             {
                 continue;
             }
-            renderPos.set(gridPos.x * TILE_SIZE, gridPos.y * TILE_SIZE);
+            renderPos.set(gridPos.x * WorldMap.getTileSize(), gridPos.y * WorldMap.getTileSize());
         }
     }
 
@@ -113,19 +109,6 @@ public class Ingame extends State
     public void dispose()
     {
         m_world.dispose();
-        m_worldRenderer.dispose();
-    }
-
-    private void loadMap(String file)
-    {
-        m_world = new TmxMapLoader().load("maps/" + file);
-        if (m_worldRenderer == null)
-        {
-            m_worldRenderer = new OrthogonalTiledMapRenderer(m_world, m_batch);
-        } else
-        {
-            m_worldRenderer.setMap(m_world);
-        }
     }
 
     private class IngameInputProcessor extends InputAdapter
@@ -141,15 +124,16 @@ public class Ingame extends State
             {
                 List<Entity> playerTeam = m_entityHandler.getEntities(PlayerTeam.class);
                 m_stateStacker.push(new Battle(m_batch, m_shapeRenderer, m_stateStacker, playerTeam, m_player));
+                return true;
+            } else
+            {
+                return false;
             }
-
-            return false;
         }
 
         @Override
         public boolean keyUp(int keycode)
         {
-
             return false;
         }
     }

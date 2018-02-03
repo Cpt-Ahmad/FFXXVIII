@@ -4,12 +4,13 @@ import de.captain.ffxxviii.entity.Entity;
 import de.captain.ffxxviii.entity.components.GridPosition;
 import de.captain.ffxxviii.entity.components.GridVelocity;
 import de.captain.ffxxviii.entity.components.RenderPosition;
-import de.captain.ffxxviii.states.Ingame;
+import de.captain.ffxxviii.main.WorldMap;
 
 import java.util.List;
 
 public class MovementSystem extends EntityUpdateSystem
 {
+
     public MovementSystem()
     {
         super(EntitySystemType.MOVEMENT);
@@ -18,28 +19,28 @@ public class MovementSystem extends EntityUpdateSystem
     @Override
     public void update(List<Entity> entities)
     {
-        GridPosition gridPos;
+        GridPosition   gridPos;
         RenderPosition renderPos;
-        GridVelocity gridVel;
+        GridVelocity   gridVel;
 
-        for(Entity entity : entities)
+        for (Entity entity : entities)
         {
             gridPos = entity.getComponent(GridPosition.class);
             gridVel = entity.getComponent(GridVelocity.class);
             renderPos = entity.getComponent(RenderPosition.class);
 
-            if(gridPos == null || gridVel == null || renderPos == null)
+            if (gridPos == null || gridVel == null || renderPos == null)
             {
                 continue;
             }
 
             GridVelocity.Direction direction = gridVel.move();
-            if(direction == GridVelocity.Direction.MOVING)
+            if (direction == GridVelocity.Direction.MOVING)
             {
                 renderPos.translate(gridVel.getVelocity());
-            } else if(direction != GridVelocity.Direction.NONE)
+            } else if (direction != GridVelocity.Direction.NONE)
             {
-                switch(direction)
+                switch (direction)
                 {
                     case UP:
                         gridPos.y++;
@@ -54,7 +55,7 @@ public class MovementSystem extends EntityUpdateSystem
                         gridPos.x++;
                         break;
                 }
-                renderPos.set(gridPos.x * Ingame.TILE_SIZE, gridPos.y * Ingame.TILE_SIZE);
+                renderPos.set(gridPos.x * WorldMap.getTileSize(), gridPos.y * WorldMap.getTileSize());
             }
         }
     }

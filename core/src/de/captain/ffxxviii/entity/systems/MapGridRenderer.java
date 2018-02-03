@@ -4,8 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import de.captain.ffxxviii.entity.Entity;
-import de.captain.ffxxviii.states.Ingame;
-import de.captain.ffxxviii.util.WorldMap;
+import de.captain.ffxxviii.main.WorldMap;
 
 import java.util.List;
 
@@ -26,10 +25,10 @@ public class MapGridRenderer extends EntityRenderSystem {
         shapeRenderer.setColor(Color.BLACK);
 
         for (int i = 0; i < height; i++) {
-            shapeRenderer.line(0, i * Ingame.TILE_SIZE, width * Ingame.TILE_SIZE, i * Ingame.TILE_SIZE);
+            shapeRenderer.line(0, i * WorldMap.getTileSize(), width * WorldMap.getTileSize(), i * WorldMap.getTileSize());
         }
         for (int j = 0; j < width; j++) {
-            shapeRenderer.line(j * Ingame.TILE_SIZE, 0, j * Ingame.TILE_SIZE, height * Ingame.TILE_SIZE);
+            shapeRenderer.line(j * WorldMap.getTileSize(), 0, j * WorldMap.getTileSize(), height * WorldMap.getTileSize());
         }
         shapeRenderer.end();
     }

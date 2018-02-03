@@ -9,6 +9,8 @@ public final class Log
     public enum Logger
     {
         BATTLE,
+        TESTING,
+        MAP,
         ITEM
     }
 

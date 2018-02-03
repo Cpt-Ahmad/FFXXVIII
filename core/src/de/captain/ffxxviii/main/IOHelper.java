@@ -1,6 +1,12 @@
 package de.captain.ffxxviii.main;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import de.captain.ffxxviii.entity.Entity;
+import de.captain.ffxxviii.entity.components.TileInfo;
+import de.captain.ffxxviii.entity.presets.InfoTile;
 import de.captain.ffxxviii.item.Item;
 import de.captain.ffxxviii.item.components.ItemComponent;
 import de.captain.ffxxviii.item.components.Recipe;
@@ -68,5 +74,23 @@ public final class IOHelper
         }
 
         new Item(key, name, value, type, components);
+    }
+
+    public static TiledMap loadMap(String file, List<Entity> entities)
+    {
+        TiledMap          map   = new TmxMapLoader().load(file);
+        TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("walkable4");
+        for (int x = 0; x < layer.getWidth(); x++)
+        {
+            for (int y = 0; y < layer.getHeight(); y++)
+            {
+                if (layer.getCell(x, y).getTile().getId() == 20)
+                {
+                    entities.add(new InfoTile(x, y, TileInfo.TileInfoType.BLOCKED));
+                }
+            }
+        }
+
+        return map;
     }
 }

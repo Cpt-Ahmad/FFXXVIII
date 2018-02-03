@@ -1,7 +1,7 @@
 package de.captain.ffxxviii.entity.components;
 
 import com.badlogic.gdx.math.Vector2;
-import de.captain.ffxxviii.states.Ingame;
+import de.captain.ffxxviii.main.WorldMap;
 
 /**
  * Component for moving entities inside of a grid map.
@@ -48,7 +48,7 @@ public class GridVelocity implements Component
         }
 
         m_maxTicksForMovement = maxTicksForMovement;
-        m_movementSpeed = ((float) Ingame.TILE_SIZE) / ((float) maxTicksForMovement);
+        m_movementSpeed = ((float) WorldMap.getTileSize()) / ((float) maxTicksForMovement);
     }
 
     /**

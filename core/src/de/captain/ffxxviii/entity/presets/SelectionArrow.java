@@ -7,9 +7,9 @@ import de.captain.ffxxviii.entity.components.TextureContainer;
 import de.captain.ffxxviii.main.Asset;
 import de.captain.ffxxviii.main.Assets;
 
-public class BattleArrow extends Entity
+public class SelectionArrow extends Entity
 {
-    public BattleArrow()
+    public SelectionArrow()
     {
         super();
         TextureContainer tex = new TextureContainer(Assets.getAssets().getTexture(Asset.ARROW));

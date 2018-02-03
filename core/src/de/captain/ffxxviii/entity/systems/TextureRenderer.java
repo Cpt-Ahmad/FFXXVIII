@@ -1,13 +1,12 @@
 package de.captain.ffxxviii.entity.systems;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import de.captain.ffxxviii.entity.Entity;
 import de.captain.ffxxviii.entity.components.GridPosition;
 import de.captain.ffxxviii.entity.components.RenderPosition;
 import de.captain.ffxxviii.entity.components.TextureContainer;
-import de.captain.ffxxviii.states.Ingame;
+import de.captain.ffxxviii.main.WorldMap;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class TextureRenderer extends EntityRenderSystem{
             if(textureContainer != null && renderPosition != null){
                 batch.draw(textureContainer.texture, renderPosition.x,renderPosition.y);
             } else if(textureContainer != null && gridPosition != null){
-                batch.draw(textureContainer.texture, gridPosition.x * Ingame.TILE_SIZE, gridPosition.y * Ingame.TILE_SIZE);
+                batch.draw(textureContainer.texture, gridPosition.x * WorldMap.getTileSize(), gridPosition.y * WorldMap.getTileSize());
             }
 
         }

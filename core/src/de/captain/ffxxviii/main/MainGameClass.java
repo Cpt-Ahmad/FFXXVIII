@@ -32,6 +32,7 @@ public class MainGameClass extends ApplicationAdapter
         List<Log.Logger> logList = new ArrayList<>();
         logList.add(Log.Logger.BATTLE);
         logList.add(Log.Logger.ITEM);
+        logList.add(Log.Logger.MAP);
         Log.setLogList(logList);
 
         m_batch = new SpriteBatch();
@@ -59,8 +60,10 @@ public class MainGameClass extends ApplicationAdapter
 
         Testing.get().test();
 
+        // Update the states
         m_stateStacker.update(Gdx.graphics.getDeltaTime());
 
+        // Render the states
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         m_stateStacker.render();
