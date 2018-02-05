@@ -15,7 +15,7 @@ public class PlayerTeamMember extends Entity
         super();
         RenderPosition rPos = new RenderPosition();
         PlayerTeam playerTeam = new PlayerTeam();
-        TextureContainer texCon    = new TextureContainer(Assets.getAssets().getTexture(Asset.TEST));
+        TextureContainer texCon    = new TextureContainer(Assets.getTexture(Asset.TEST));
         CombatInfo cInfo = new CombatInfo(isFrontLine, 100);
 
         addComponents(rPos, playerTeam, texCon, cInfo);

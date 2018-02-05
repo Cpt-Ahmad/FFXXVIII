@@ -14,7 +14,7 @@ public class Goblin extends Entity
         RenderPosition rPos  = new RenderPosition(x, y);
         CombatInfo     cInfo = new CombatInfo(isFrontLine, 10);
         cInfo.experiencePoints = 20;
-        TextureContainer texCon = new TextureContainer(Assets.getAssets().getTexture(Asset.TEST_ENEMY));
+        TextureContainer texCon = new TextureContainer(Assets.getTexture(Asset.TEST_ENEMY));
         Enemy            enemy  = new Enemy(Enemy.EnemyType.GOBLIN);
         Name             name   = new Name("Goblin");
         Inventory        inv    = new Inventory();

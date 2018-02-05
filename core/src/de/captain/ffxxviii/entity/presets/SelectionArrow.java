@@ -12,7 +12,7 @@ public class SelectionArrow extends Entity
     public SelectionArrow()
     {
         super();
-        TextureContainer tex = new TextureContainer(Assets.getAssets().getTexture(Asset.ARROW));
+        TextureContainer tex = new TextureContainer(Assets.getTexture(Asset.ARROW));
         RenderPosition rPos = new RenderPosition(-100f, -100f);
         ArrowSelection sel = new ArrowSelection();
 

@@ -39,7 +39,7 @@ public class MainGameClass extends ApplicationAdapter
         m_shapeRenderer = new ShapeRenderer();
         m_stateStacker = new StateStacker();
 
-        Assets.getAssets().init();
+        Assets.init();
         Item.init();
 
         m_stateStacker.push(new MainMenu(m_batch, m_shapeRenderer, m_stateStacker));

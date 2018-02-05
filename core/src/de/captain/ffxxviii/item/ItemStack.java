@@ -99,4 +99,10 @@ public class ItemStack
             count = x;
         }
     }
+
+    @Override
+    public String toString()
+    {
+        return item.name + ": " + count;
+    }
 }

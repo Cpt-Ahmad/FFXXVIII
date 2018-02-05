@@ -125,6 +125,10 @@ public class Ingame extends State
                 List<Entity> playerTeam = m_entityHandler.getEntities(PlayerTeam.class);
                 m_stateStacker.push(new Battle(m_batch, m_shapeRenderer, m_stateStacker, playerTeam, m_player));
                 return true;
+            } else if (keycode == Input.Keys.I)
+            {
+                m_stateStacker.push(new InventoryMenu(m_batch, m_shapeRenderer, m_stateStacker, m_player.getComponent(Inventory.class)));
+                return true;
             } else
             {
                 return false;
