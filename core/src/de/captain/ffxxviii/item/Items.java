@@ -1,38 +1,36 @@
-package de.captain.ffxxviii.main;
+package de.captain.ffxxviii.item;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import de.captain.ffxxviii.entity.Entity;
-import de.captain.ffxxviii.entity.components.TileInfo;
-import de.captain.ffxxviii.entity.presets.InfoTile;
-import de.captain.ffxxviii.item.Item;
 import de.captain.ffxxviii.item.components.ItemComponent;
 import de.captain.ffxxviii.item.components.Recipe;
 import de.captain.ffxxviii.util.Log;
 import org.yaml.snakeyaml.Yaml;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.MissingResourceException;
+import java.util.*;
 
-public final class IOHelper
+public class Items
 {
-    public static void loadItems(String filename)
+    private static final Map<String, Item> s_itemMap = new HashMap<>();
+
+    public static void init()
     {
         Yaml             yaml     = new Yaml();
-        Map<String, Map> itemData = yaml.load(Gdx.files.internal(filename).readString());
+        Map<String, Map> itemData = yaml.load(Gdx.files.internal("items.yaml").readString());
         for (String key : itemData.keySet())
         {
             Map itemProperties = itemData.get(key);
             evaluateItemProperties(key, itemProperties);
         }
+        Log.debug(Log.Logger.ITEM, s_itemMap.size() + " items loaded");
     }
 
     private static void evaluateItemProperties(String key, Map itemProperties)
     {
+        if (s_itemMap.containsKey(key))
+        {
+            throw new IllegalArgumentException(String.format("The item identifier \"%s\" already exists", key));
+        }
+
         List<ItemComponent> components = new ArrayList<>();
         String              name       = null;
         String              type       = null;
@@ -59,7 +57,7 @@ public final class IOHelper
                     components.add(new Recipe(itemsReq));
                     break;
                 default:
-                    Log.log(Log.Logger.ITEM, "The item property \"" + property + "\" does not exist");
+                    Log.log(Log.Logger.ITEM, String.format("The item property \"%s\" does not exist", property));
                     break;
             }
         }
@@ -73,24 +71,15 @@ public final class IOHelper
             throw new MissingResourceException("Item type missing", "String", "type");
         }
 
-        new Item(key, name, value, type, components);
+        s_itemMap.put(key, new Item(key, name, value, type, components));
     }
 
-    public static TiledMap loadMap(String file, List<Entity> entities)
+    public static Item getItem(String identifier)
     {
-        TiledMap          map   = new TmxMapLoader().load(file);
-        TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("walkable4");
-        for (int x = 0; x < layer.getWidth(); x++)
+        if (!s_itemMap.containsKey(identifier))
         {
-            for (int y = 0; y < layer.getHeight(); y++)
-            {
-                if (layer.getCell(x, y).getTile().getId() == 20)
-                {
-                    entities.add(new InfoTile(x, y, TileInfo.TileInfoType.BLOCKED));
-                }
-            }
+            throw new IllegalArgumentException("There is no item for the identifier " + identifier);
         }
-
-        return map;
+        return s_itemMap.get(identifier);
     }
 }

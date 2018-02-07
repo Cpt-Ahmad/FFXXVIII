@@ -6,7 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import de.captain.ffxxviii.item.Item;
+import de.captain.ffxxviii.item.Items;
 import de.captain.ffxxviii.states.MainMenu;
 import de.captain.ffxxviii.util.Log;
 import de.captain.ffxxviii.util.Testing;
@@ -33,6 +33,7 @@ public class MainGameClass extends ApplicationAdapter
         logList.add(Log.Logger.BATTLE);
         logList.add(Log.Logger.ITEM);
         logList.add(Log.Logger.MAP);
+        logList.add(Log.Logger.INGAME);
         Log.setLogList(logList);
 
         m_batch = new SpriteBatch();
@@ -40,7 +41,7 @@ public class MainGameClass extends ApplicationAdapter
         m_stateStacker = new StateStacker();
 
         Assets.init();
-        Item.init();
+        Items.init();
 
         m_stateStacker.push(new MainMenu(m_batch, m_shapeRenderer, m_stateStacker));
     }
@@ -74,6 +75,6 @@ public class MainGameClass extends ApplicationAdapter
     {
         m_batch.dispose();
         m_shapeRenderer.dispose();
-        // TODO add assets dispose method
+        Assets.dispose();
     }
 }

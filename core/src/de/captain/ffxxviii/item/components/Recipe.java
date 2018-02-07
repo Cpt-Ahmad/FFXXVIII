@@ -1,6 +1,7 @@
 package de.captain.ffxxviii.item.components;
 
 import de.captain.ffxxviii.item.Item;
+import de.captain.ffxxviii.item.Items;
 import de.captain.ffxxviii.util.ImmutableArray;
 
 import java.util.Map;
@@ -16,7 +17,7 @@ public class Recipe implements ItemComponent
         for (Object keyObject : itemsReq.keySet())
         {
             String key = (String) keyObject;
-            stacks[index++] = new UnmodifiableItemStack(Item.getItem(key), (Integer) itemsReq.get(keyObject));
+            stacks[index++] = new UnmodifiableItemStack(Items.getItem(key), (Integer) itemsReq.get(keyObject));
         }
 
         itemReq = new ImmutableArray<>(stacks);

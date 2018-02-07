@@ -16,6 +16,7 @@ import de.captain.ffxxviii.entity.systems.MovementSystem;
 import de.captain.ffxxviii.entity.systems.TextureRenderer;
 import de.captain.ffxxviii.main.StateStacker;
 import de.captain.ffxxviii.main.WorldMap;
+import de.captain.ffxxviii.util.Log;
 
 import java.util.List;
 
@@ -116,22 +117,42 @@ public class Ingame extends State
         @Override
         public boolean keyDown(int keycode)
         {
-            if (keycode == Input.Keys.ESCAPE)
+            switch (keycode)
             {
-                m_stateStacker.pop();
-                return true;
-            } else if (keycode == Input.Keys.B)
-            {
-                List<Entity> playerTeam = m_entityHandler.getEntities(PlayerTeam.class);
-                m_stateStacker.push(new Battle(m_batch, m_shapeRenderer, m_stateStacker, playerTeam, m_player));
-                return true;
-            } else if (keycode == Input.Keys.I)
-            {
-                m_stateStacker.push(new InventoryMenu(m_batch, m_shapeRenderer, m_stateStacker, m_player.getComponent(Inventory.class)));
-                return true;
-            } else
-            {
-                return false;
+                case Input.Keys.ESCAPE:
+                    m_stateStacker.pop();
+                    return true;
+
+                case Input.Keys.B:
+                    List<Entity> playerTeam = m_entityHandler.getEntities(PlayerTeam.class);
+                    m_stateStacker.push(new Battle(m_batch, m_shapeRenderer, m_stateStacker, playerTeam, m_player));
+                    return true;
+
+                case Input.Keys.I:
+                    m_stateStacker.push(new InventoryMenu(m_batch, m_shapeRenderer, m_stateStacker,
+                                                          m_player.getComponent(Inventory.class)));
+                    return true;
+
+                case Input.Keys.SPACE:
+                    GridPosition playerPos = m_player.getComponent(GridPosition.class);
+
+                    GridPosition entityPos;
+                    TileInfo info;
+
+                    for (Entity entity : m_entityHandler.getEntityList())
+                    {
+                        entityPos = entity.getComponent(GridPosition.class);
+                        info = entity.getComponent(TileInfo.class);
+                        if (entityPos != null && info != null && entityPos.equals(playerPos) && info.type ==
+                                                                                                TileInfo.TileInfoType.INTERACTION)
+                        {
+                            Log.debug(Log.Logger.INGAME, "Interaction at " + entityPos.toString());
+                        }
+                    }
+                    return true;
+
+                default:
+                    return false;
             }
         }
 

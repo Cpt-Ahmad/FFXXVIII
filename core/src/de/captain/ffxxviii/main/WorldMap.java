@@ -45,7 +45,7 @@ public class WorldMap implements Disposable
         MapProperties properties = m_map.getProperties();
         s_mapWidth = properties.get("width", Integer.class);
         s_mapHeight = properties.get("height", Integer.class);
-        int tileWidth = properties.get("tilewidth", Integer.class);
+        int tileWidth  = properties.get("tilewidth", Integer.class);
         int tileHeight = properties.get("tileheight", Integer.class);
 
         if (tileWidth != tileHeight)
@@ -71,7 +71,16 @@ public class WorldMap implements Disposable
                 TileInfo.TileInfoType infoType = TileInfo.TileInfoType.get(id);
                 if (infoType == null) continue;
 
-                entities.add(new InfoTile(x, y, infoType));
+                if (infoType.multipleInfos == null)
+                {
+                    entities.add(new InfoTile(x, y, infoType));
+                } else
+                {
+                    for (Integer index : infoType.multipleInfos)
+                    {
+                        entities.add(new InfoTile(x, y, TileInfo.TileInfoType.get(index)));
+                    }
+                }
             }
         }
 

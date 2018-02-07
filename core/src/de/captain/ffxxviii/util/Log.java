@@ -11,6 +11,7 @@ public final class Log
         BATTLE,
         TESTING,
         MAP,
+        INGAME,
         ITEM
     }
 

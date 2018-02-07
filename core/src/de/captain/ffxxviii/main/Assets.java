@@ -89,5 +89,11 @@ public class Assets
     {
         return s_skin;
     }
+
+    public static void dispose()
+    {
+        s_assetManager.dispose();
+        s_skin.dispose();
+    }
 }
 

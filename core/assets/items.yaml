@@ -1,4 +1,8 @@
 # items
+money:
+  name: Doubloon
+  value: 1
+  type: currency
 wood:
   name: Wood
   value: 10
