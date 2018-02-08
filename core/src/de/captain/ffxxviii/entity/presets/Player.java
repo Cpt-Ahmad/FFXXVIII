@@ -17,12 +17,15 @@ public class Player extends Entity
         GridVelocity     gridVel   = new GridVelocity(30);
         RenderPosition   renderPos = new RenderPosition();
         Dimension        dim       = new Dimension(texCon.texture.getWidth(), texCon.texture.getHeight());
-        PlayerTeam playerTeam = new PlayerTeam();
-        CombatInfo cInfo = new CombatInfo(true, 5000);
-        Name name = new Name("Player");
+        CombatInfo       cInfo     = new CombatInfo(true, 5000);
+        Name             name      = new Name("Player");
+
         Inventory inv = new Inventory();
         inv.add(Items.getItem("wood"), 10);
         inv.add(Items.getItem("iron"), 14);
+
+        PlayerTeam playerTeam = new PlayerTeam(new PlayerTeamMember().melee(), new PlayerTeamMember().ranged(),
+                                               new PlayerTeamMember().mage());
 
         addComponents(gridPos, gridVel, renderPos, dim, texCon, playerTeam, cInfo, name, inv);
     }

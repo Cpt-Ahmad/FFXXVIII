@@ -8,7 +8,8 @@ public class TileInfo implements Component
     {
         INTERACTION(0),
         BLOCKED(1),
-        BLOCKED_AND_INTERACTION(2, new TileInfoType[]{INTERACTION, BLOCKED});
+        BLOCKED_AND_INTERACTION(2, new TileInfoType[]{INTERACTION, BLOCKED}),
+        RERENDER(3);
 
         public final int                     id;
         public final ImmutableArray<Integer> multipleInfos;

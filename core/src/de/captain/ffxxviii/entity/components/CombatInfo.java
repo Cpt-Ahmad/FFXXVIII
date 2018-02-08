@@ -2,14 +2,20 @@ package de.captain.ffxxviii.entity.components;
 
 import de.captain.ffxxviii.entity.type.AttackType;
 import de.captain.ffxxviii.entity.type.Element;
+import de.captain.ffxxviii.item.components.Armor;
+import de.captain.ffxxviii.item.components.Weapon;
 
 public class CombatInfo implements Component
 {
     public boolean isFrontLine;
     public boolean isAlive = true;
+    public boolean isEnemy = true;
 
     public int maxHealth, health;
     public int staminaPerSec = 5, stamina = 0;
+    public int strength = 1;
+    public int armor, evasion, shield;
+
     public int experiencePoints;
     public int battlefieldPosition = -1;
 
@@ -60,17 +66,38 @@ public class CombatInfo implements Component
 
     public int damage(int damage, Element element)
     {
-        health -= damage;
-        isAlive = (health > 0);
-        if(health < 0)
+        switch (element)
         {
-            health = 0;
-        } else if(health > maxHealth)
-        {
-            health = maxHealth;
+            case NONE:
+                damage = damage > armor ? damage - armor : 1;
+                break;
         }
 
+        if (shield > 0 && element != Element.HEAL)
+        {
+            shield -= damage;
+            if (shield < 0)
+            {
+                health += shield;
+                shield = 0;
+            }
+        } else
+        {
+            health -= damage;
+        }
+
+        isAlive = (health > 0);
+
+        if (health < 0) health = 0;
+        else if (health > maxHealth) health = maxHealth;
+
         return damage;
+    }
+
+    public void applyEquipmentToStats(Equipment eq)
+    {
+        strength = eq.weapon == null ? 1 : eq.weapon.get(Weapon.class).attackPower;
+        armor = eq.armor == null ? 1 : eq.armor.get(Armor.class).armor;
     }
 
     public int getTarget()

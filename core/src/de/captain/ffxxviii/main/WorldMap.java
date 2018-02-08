@@ -50,7 +50,7 @@ public class WorldMap implements Disposable
 
         if (tileWidth != tileHeight)
         {
-            throw new GameException("the tile width and tile height are not equal (" + filename + ")");
+            throw new GameException(String.format("the tile width and tile height are not equal (%s)", filename));
         }
         s_tileSize = tileWidth;
 

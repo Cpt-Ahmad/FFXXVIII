@@ -18,8 +18,6 @@ import de.captain.ffxxviii.main.StateStacker;
 import de.captain.ffxxviii.main.WorldMap;
 import de.captain.ffxxviii.util.Log;
 
-import java.util.List;
-
 public class Ingame extends State
 {
     private final WorldMap m_world;
@@ -124,8 +122,7 @@ public class Ingame extends State
                     return true;
 
                 case Input.Keys.B:
-                    List<Entity> playerTeam = m_entityHandler.getEntities(PlayerTeam.class);
-                    m_stateStacker.push(new Battle(m_batch, m_shapeRenderer, m_stateStacker, playerTeam, m_player));
+                    m_stateStacker.push(new Battle(m_batch, m_shapeRenderer, m_stateStacker, m_player));
                     return true;
 
                 case Input.Keys.I:

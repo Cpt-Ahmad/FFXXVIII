@@ -3,8 +3,7 @@ package de.captain.ffxxviii.entity.type;
 public enum AttackType
 {
     BASIC_ATTACK(10, 1000, Element.NONE),
-    HEAVY_ATTACK(30, 2500, Element.NONE),
-    ;
+    HEAVY_ATTACK(30, 2500, Element.NONE),;
 
     public final int     damage;
     public final int     staminaRequired;

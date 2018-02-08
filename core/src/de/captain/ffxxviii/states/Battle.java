@@ -40,40 +40,43 @@ public class Battle extends State
 
     private EntityHandler m_entityHandler = new EntityHandler();
 
-    Battle(SpriteBatch batch, ShapeRenderer shapeRenderer, StateStacker stateStacker, List<Entity> playerTeam,
+    Battle(SpriteBatch batch, ShapeRenderer shapeRenderer, StateStacker stateStacker,
            Entity player)
     {
         super(batch, shapeRenderer, stateStacker);
-        if (playerTeam.size() > 3 || playerTeam.size() == 0)
+        PlayerTeam playerTeam = player.getComponent(PlayerTeam.class);
+        if (playerTeam != null && !playerTeam.isEmpty())
         {
-            throw new IllegalArgumentException(
-                    "Player team can have up to 3 entities and has to be non-zero (" + playerTeam.size() + " in it)");
-        }
+            m_playerCounter = playerTeam.size();
 
-        m_playerCounter = playerTeam.size();
+            m_enemiesKilled = new ArrayList<>(6);
+            m_entities = m_entityHandler.getEntityList();
 
-        m_enemiesKilled = new ArrayList<>(6);
-        m_entities = m_entityHandler.getEntityList();
+            for (int i = 0; i < playerTeam.all.length; i++)
+            {
+                if (playerTeam.all[i] == null) continue;
+                RenderPosition renderPos = playerTeam.all[i].getComponent(RenderPosition.class);
+                CombatInfo     cInfo     = playerTeam.all[i].getComponent(CombatInfo.class);
+                Equipment      equip     = playerTeam.all[i].getComponent(Equipment.class);
 
-        for (int i = 0; i < playerTeam.size(); i++)
+                cInfo.applyEquipmentToStats(equip);
+                renderPos.set(50 + (cInfo.isFrontLine ? 75 : 0), 100 + 75 * i);
+            }
+
+            m_player = player;
+
+            m_entityHandler.addSystem(new TextureRenderer());
+
+            m_enemyCounter = 4;
+
+            m_arrow = new SelectionArrow();
+            m_entityHandler.addEntity(m_arrow);
+            m_entityHandler.addEntities(playerTeam.all);
+            m_entityHandler.addEntities(createEnemyTeam(m_enemyCounter));
+        } else
         {
-            Entity         entity    = playerTeam.get(i);
-            RenderPosition renderPos = entity.getComponent(RenderPosition.class);
-            CombatInfo     cInfo     = entity.getComponent(CombatInfo.class);
-
-            renderPos.set(50 + (cInfo.isFrontLine ? 75 : 0), 100 + 75 * i);
+            throw new IllegalArgumentException("player does not have a team to battle");
         }
-
-        m_player = player;
-
-        m_entityHandler.addSystem(new TextureRenderer());
-
-        m_enemyCounter = 2;
-
-        m_arrow = new SelectionArrow();
-        m_entityHandler.addEntity(m_arrow);
-        m_entityHandler.addEntities(playerTeam);
-        m_entityHandler.addEntities(createEnemyTeam(m_enemyCounter));
     }
 
     @Override
@@ -97,7 +100,6 @@ public class Battle extends State
 
             if (attacker != null && attacker.isAlive)
             {
-
                 // Sets the render position of the selection arrow
                 if (m_cursor == attacker.battlefieldPosition)
                 {
@@ -115,12 +117,11 @@ public class Battle extends State
                     } else if (!attacker.isAttackSelected()) // is an attack selected for this entity
                     {
                         // Is the entity an enemy -> select an attack and target
-                        if (entity.hasComponent(Enemy.class))
+                        if (attacker.isEnemy)
                         {
                             selectEnemyAttackAgainstPlayer(m_entities, entity);
                             Log.debug(Log.Logger.BATTLE, "Enemy chose attack");
-                        } else if (entity
-                                .hasComponent(PlayerTeam.class)) // if its a player, set the battle to waiting mode
+                        } else // if its a player, set the battle to waiting mode
                         {
                             Log.debug(Log.Logger.BATTLE, "Player Turn");
                             m_currentEntity = entity;
@@ -134,32 +135,30 @@ public class Battle extends State
             }
         }
 
+        // Remove all dead enemies from the active entity list and add them to the dead enemy list
+        // Additionally reduce the appropriate counter
         for (Iterator<Entity> iterator = m_entities.iterator(); iterator.hasNext(); )
         {
             Entity     entity = iterator.next();
             CombatInfo cInfo  = entity.getComponent(CombatInfo.class);
 
-            if (cInfo == null)
+            if (cInfo != null && !cInfo.isAlive)
             {
-                continue;
-            }
-
-            if (!cInfo.isAlive)
-            {
-                if (entity.hasComponent(Enemy.class))
+                if (cInfo.isEnemy)
                 {
                     m_enemiesKilled.add(entity);
                     String name = entity.getComponent(Name.class).name;
                     Log.debug(Log.Logger.BATTLE, name + " died.");
                     iterator.remove();
                     m_enemyCounter--;
-                } else if (entity.hasComponent(PlayerTeam.class))
+                } else
                 {
                     m_playerCounter--;
                 }
             }
         }
 
+        // All enemies are defeated
         if (m_enemyCounter == 0)
         {
             int       totalExp  = 0;
@@ -180,7 +179,7 @@ public class Battle extends State
             for (Entity entity : m_entities)
             {
                 CombatInfo cInfo = entity.getComponent(CombatInfo.class);
-                if (entity.hasComponent(PlayerTeam.class) && cInfo != null && cInfo.isAlive)
+                if (cInfo != null && cInfo.isAlive && !cInfo.isEnemy)
                 {
                     cInfo.experiencePoints += (totalExp / m_playerCounter);
                 }
@@ -223,9 +222,10 @@ public class Battle extends State
             throw new IllegalArgumentException("The defending entity cannot be null");
         }
 
-        CombatInfo attacker    = attackerEntity.getComponent(CombatInfo.class);
-        CombatInfo defender    = defenderEntity.getComponent(CombatInfo.class);
-        int        damageTaken = defender.damage(attacker.getAttackDamage(), attacker.getAttackElement());
+        CombatInfo attacker = attackerEntity.getComponent(CombatInfo.class);
+        CombatInfo defender = defenderEntity.getComponent(CombatInfo.class);
+        int damageTaken =
+                defender.damage(attacker.getAttackDamage() * attacker.strength, attacker.getAttackElement());
         attacker.setAttackFinished();
 
         Name attackerName = attackerEntity.getComponent(Name.class);
@@ -250,16 +250,14 @@ public class Battle extends State
     private void selectEnemyAttackAgainstPlayer(List<Entity> entities, Entity attacker)
     {
         CombatInfo enemy = attacker.getComponent(CombatInfo.class);
-        if (enemy == null)
-        {
-            return;
-        }
+        if (enemy == null) return;
 
         for (Entity entity : entities)
         {
-            if (entity.hasComponent(PlayerTeam.class))
+            CombatInfo player = entity.getComponent(CombatInfo.class);
+            if (player != null && !player.isEnemy)
             {
-                int defenderIndex = entity.getComponent(CombatInfo.class).battlefieldPosition;
+                int defenderIndex = player.battlefieldPosition;
                 enemy.setAttack(AttackType.HEAVY_ATTACK, defenderIndex);
                 return;
             }

@@ -53,8 +53,7 @@ public class Items
                     break;
                 case "recipe":
                     Map recipeProperty = (Map) itemProperties.get(property);
-                    Map itemsReq = (Map) recipeProperty.get("item-req");
-                    components.add(new Recipe(itemsReq));
+                    components.add(new Recipe(recipeProperty));
                     break;
                 default:
                     Log.log(Log.Logger.ITEM, String.format("The item property \"%s\" does not exist", property));
