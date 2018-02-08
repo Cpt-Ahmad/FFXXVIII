@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import de.captain.ffxxviii.entity.Entity;
@@ -196,6 +197,10 @@ public class Battle extends State
         m_batch.setProjectionMatrix(m_camera.combined);
         m_shapeRenderer.setProjectionMatrix(m_camera.combined);
 
+        m_shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        m_shapeRenderer.setColor(Color.GREEN);
+        m_shapeRenderer.rect(0,0, m_camera.viewportWidth, m_camera.viewportHeight);
+        m_shapeRenderer.end();
         m_entityHandler.render(m_batch, m_shapeRenderer);
     }
 
