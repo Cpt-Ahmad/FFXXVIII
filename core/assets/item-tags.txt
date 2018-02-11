@@ -4,10 +4,11 @@ identifier:
 	value: money value of the item (defaults to 1)
 	
 	recipe: map of the identifier of the item needed and the amount of it {identifier: amount)}
-	
-	weapon-type: the type of the weapon; melee, ranged, mage (mandatory if the type is weapon)
-	attack-power: the attack power of a weapon, potion or other combat item (mandatory if the type is: weapon, potion, combat)
-	element: the element of the weapon, potion or other combat item (mandatory if the type is: weapon, potion, combat)
+
+	weapon:
+        weapon-type: the type of the weapon; melee, ranged, mage (mandatory if the type is weapon)
+        attack-power: the attack power of a weapon, potion or other combat item (mandatory if the type is: weapon, potion, combat)
+        element: the element of the weapon, potion or other combat item (mandatory if the type is: weapon, potion, combat)
 	
 	armor: the armor value of the given piece of equipment (mandatory if the type is: armor)
 	

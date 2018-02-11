@@ -15,18 +15,38 @@ iron:
   name: Iron
   value: 20
   type: resource
-  trigger-the: default-case
 iron-sword:
   name: Iron Sword
   value: 300
   type: weapon
-  weapon-type: melee
-  attack-power: 10
-  element: none
+  weapon:
+    weapon-type: melee
+    attack-power: 5
+    element: none
   recipe: {iron: 10}
+wooden-fire-staff:
+  name: Wooden Staff
+  value: 300
+  type: weapon
+  weapon:
+    weapon-type: mage
+    attack-power: 10
+    element: fire
+  recipe: {wood: 10}
+wooden-bow:
+  name: Wooden Bow
+  value: 300
+  type: weapon
+  weapon:
+    weapon-type: ranged
+    attack-power: 10
+    element: none
+  recipe: {wood: 10}
 healing-potion-1:
   name: Healing Potion I
   value: 50
-  type: potion
-  attack-power: -200
-  element: heal
+  type: combat-utility
+  weapon:
+    weapon-type: utility
+    attack-power: -200
+    element: heal

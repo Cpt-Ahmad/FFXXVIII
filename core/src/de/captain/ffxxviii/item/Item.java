@@ -2,10 +2,7 @@ package de.captain.ffxxviii.item;
 
 import de.captain.ffxxviii.item.components.ItemComponent;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Item
 {
@@ -16,7 +13,7 @@ public class Item
     public final int    value;
 
 
-    public Item(String identifier, String name, int value, String type, List<ItemComponent> components)
+    public Item(String identifier, String name, int value, String type, Collection<ItemComponent> components)
     {
         if (identifier == null)
         {

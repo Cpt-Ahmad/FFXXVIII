@@ -13,18 +13,16 @@ public class PlayerTeamMember extends Entity
     public PlayerTeamMember()
     {
         super();
-        RenderPosition   rPos   = new RenderPosition();
-        Equipment equip = new Equipment();
+        RenderPosition rPos  = new RenderPosition();
+        Equipment      equip = new Equipment();
 
-        addComponents(rPos,equip);
+        addComponents(rPos, equip);
     }
 
     public Entity melee()
     {
         CombatInfo cInfo = new CombatInfo(true, 200);
         cInfo.isEnemy = false;
-        cInfo.strength = 5;
-        cInfo.armor = 20;
 
         TextureContainer texCon = new TextureContainer(Assets.getTexture(Asset.WARRIOR));
         addComponents(cInfo, texCon);
@@ -35,8 +33,6 @@ public class PlayerTeamMember extends Entity
     {
         CombatInfo cInfo = new CombatInfo(true, 100);
         cInfo.isEnemy = false;
-        cInfo.strength = 10;
-        cInfo.armor = 10;
 
         TextureContainer texCon = new TextureContainer(Assets.getTexture(Asset.ARCHER));
         addComponents(cInfo, texCon);
@@ -47,8 +43,6 @@ public class PlayerTeamMember extends Entity
     {
         CombatInfo cInfo = new CombatInfo(true, 100);
         cInfo.isEnemy = false;
-        cInfo.strength = 10;
-        cInfo.armor = 10;
 
         TextureContainer texCon = new TextureContainer(Assets.getTexture(Asset.MAGE));
         addComponents(cInfo, texCon);

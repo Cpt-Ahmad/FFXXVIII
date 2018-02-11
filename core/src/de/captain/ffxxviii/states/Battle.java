@@ -114,7 +114,18 @@ public class Battle extends State
                     // Does an entity have an attack selected and enough stamina to use it
                     if (attacker.isReadyToAttack())
                     {
-                        attack(entity, getEntityByBattlefieldPosition(attacker.getTarget()));
+                        Entity defender = getEntityByBattlefieldPosition(attacker.getTarget());
+                        if (defender == null) // is the targeted entity already dead?
+                        {
+                            int newTarget = chooseNewTarget(attacker, attacker.getTarget());
+                            defender = getEntityByBattlefieldPosition(newTarget);
+                            if (defender == null) // no entity in the opposing team is alive
+                            {
+                                attacker.setAttackFinished();
+                                continue;
+                            }
+                        }
+                        attack(entity, defender);
                     } else if (!attacker.isAttackSelected()) // is an attack selected for this entity
                     {
                         // Is the entity an enemy -> select an attack and target
@@ -199,7 +210,7 @@ public class Battle extends State
 
         m_shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         m_shapeRenderer.setColor(Color.GREEN);
-        m_shapeRenderer.rect(0,0, m_camera.viewportWidth, m_camera.viewportHeight);
+        m_shapeRenderer.rect(0, 0, m_camera.viewportWidth, m_camera.viewportHeight);
         m_shapeRenderer.end();
         m_entityHandler.render(m_batch, m_shapeRenderer);
     }
@@ -297,6 +308,22 @@ public class Battle extends State
         }
         m_shouldUpdateBattlefieldPosition = false;
         m_battlingEntityCount = index;
+    }
+
+    private int chooseNewTarget(CombatInfo attacker, int target)
+    {
+        for (Entity entity : m_entities)
+        {
+            CombatInfo defender = entity.getComponent(CombatInfo.class);
+            if (defender != null)
+            {
+                if ((attacker.isEnemy && !defender.isEnemy) || (!attacker.isEnemy && defender.isEnemy))
+                {
+                    return defender.battlefieldPosition;
+                }
+            }
+        }
+        return -1;
     }
 
     private class EntityBattlefieldPositionComparator implements Comparator<Entity>
