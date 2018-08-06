@@ -1,4 +1,4 @@
-package de.captain.ffxxviii.entity.type;
+package de.captain.ffxxviii.entityold.type;
 
 public enum AttackType
 {

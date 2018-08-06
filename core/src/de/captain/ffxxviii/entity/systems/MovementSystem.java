@@ -1,62 +1,27 @@
 package de.captain.ffxxviii.entity.systems;
 
-import de.captain.ffxxviii.entity.Entity;
-import de.captain.ffxxviii.entity.components.GridPosition;
-import de.captain.ffxxviii.entity.components.GridVelocity;
-import de.captain.ffxxviii.entity.components.RenderPosition;
-import de.captain.ffxxviii.main.WorldMap;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
+import de.captain.ffxxviii.entity.components.Position;
+import de.captain.ffxxviii.entity.components.Velocity;
+import de.captain.ffxxviii.entity.util.Mapper;
 
-import java.util.List;
-
-public class MovementSystem extends EntityUpdateSystem
+public class MovementSystem extends EntitySystemListener
 {
-
     public MovementSystem()
     {
-        super(EntitySystemType.MOVEMENT);
+        super(EntitySystemType.MOVEMENT, Family.all(Position.class, Velocity.class).get(), false);
     }
 
     @Override
-    public void update(List<Entity> entities)
+    public void update(float deltaTime)
     {
-        GridPosition   gridPos;
-        RenderPosition renderPos;
-        GridVelocity   gridVel;
-
-        for (Entity entity : entities)
+        for (Entity entity : m_entities)
         {
-            gridPos = entity.getComponent(GridPosition.class);
-            gridVel = entity.getComponent(GridVelocity.class);
-            renderPos = entity.getComponent(RenderPosition.class);
+            Position pos = Mapper.POSITION.get(entity);
+            Velocity vel = Mapper.VELOCITY.get(entity);
 
-            if (gridPos == null || gridVel == null || renderPos == null)
-            {
-                continue;
-            }
-
-            GridVelocity.Direction direction = gridVel.move();
-            if (direction == GridVelocity.Direction.MOVING)
-            {
-                renderPos.translate(gridVel.getVelocity());
-            } else if (direction != GridVelocity.Direction.NONE)
-            {
-                switch (direction)
-                {
-                    case UP:
-                        gridPos.y++;
-                        break;
-                    case DOWN:
-                        gridPos.y--;
-                        break;
-                    case LEFT:
-                        gridPos.x--;
-                        break;
-                    case RIGHT:
-                        gridPos.x++;
-                        break;
-                }
-                renderPos.set(gridPos.x * WorldMap.getTileSize(), gridPos.y * WorldMap.getTileSize());
-            }
+            pos.move(vel.velocityVector, deltaTime);
         }
     }
 }

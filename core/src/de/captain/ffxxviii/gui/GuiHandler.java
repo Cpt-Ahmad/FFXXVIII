@@ -1,7 +1,5 @@
 package de.captain.ffxxviii.gui;
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -9,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import de.captain.ffxxviii.main.Assets;
 import de.captain.ffxxviii.main.Debug;
 
 public class GuiHandler implements Disposable
@@ -16,14 +15,14 @@ public class GuiHandler implements Disposable
     private Stage m_stage;
     private Table m_table;
 
-    public GuiHandler(float viewportWidth, float viewportHeight, SpriteBatch spriteBatch)
+    public GuiHandler(float viewportWidth, float viewportHeight)
     {
-        m_stage = new Stage(new StretchViewport(viewportWidth, viewportHeight), spriteBatch);
+        m_stage = new Stage(new StretchViewport(viewportWidth, viewportHeight), Assets.getSpriteBatch());
         m_table = new Table();
         m_table.setFillParent(true);
         m_stage.addActor(m_table);
 
-        if(Debug.SHOW_GUI_HITBOX)
+        if (Debug.SHOW_GUI_HIT_BOX)
         {
             m_table.debug();
         }

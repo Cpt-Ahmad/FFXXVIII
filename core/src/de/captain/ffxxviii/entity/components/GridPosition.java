@@ -1,7 +1,10 @@
 package de.captain.ffxxviii.entity.components;
 
+import com.badlogic.ashley.core.Component;
+
 import java.util.Objects;
 
+@Deprecated
 public class GridPosition implements Component
 {
     /**
@@ -36,7 +39,8 @@ public class GridPosition implements Component
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GridPosition that = (GridPosition) o;
+        GridPosition
+                that = (GridPosition) o;
         return x == that.x &&
                y == that.y;
     }

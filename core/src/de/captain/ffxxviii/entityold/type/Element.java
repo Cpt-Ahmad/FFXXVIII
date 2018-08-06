@@ -1,4 +1,4 @@
-package de.captain.ffxxviii.entity.type;
+package de.captain.ffxxviii.entityold.type;
 
 public enum Element
 {
@@ -6,6 +6,5 @@ public enum Element
     FIRE,
     ICE,
     THUNDER,
-    HEAL,
-    ;
+    HEAL,;
 }

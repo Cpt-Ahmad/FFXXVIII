@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -17,12 +19,18 @@ public class Assets
     private final static AssetManager s_assetManager = new AssetManager();
     private final static Skin         s_skin         = new Skin();
 
+    private static SpriteBatch   s_batch;
+    private static ShapeRenderer s_shapeRenderer;
+
     private Assets()
     {
     }
 
     public static void init()
     {
+        s_batch = new SpriteBatch();
+        s_shapeRenderer = new ShapeRenderer();
+
         for (Asset asset : Asset.values())
         {
             s_assetManager.load(asset.path, asset.assetClass);
@@ -90,10 +98,23 @@ public class Assets
         return s_skin;
     }
 
+    public static SpriteBatch getSpriteBatch()
+    {
+        return s_batch;
+    }
+
+    public static ShapeRenderer getShapeRenderer()
+    {
+        return s_shapeRenderer;
+    }
+
     public static void dispose()
     {
         s_assetManager.dispose();
         s_skin.dispose();
+
+        s_batch.dispose();
+        s_shapeRenderer.dispose();
     }
 }
 

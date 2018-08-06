@@ -7,22 +7,11 @@ import java.util.Stack;
 
 public class StateStacker
 {
-    private final Stack<State> m_states = new Stack<State>();
+    private final Stack<State> m_states = new Stack<>();
 
     public void update(float delta)
     {
-        if(m_states.size() != 0)
-        {
-            m_states.peek().update(delta);
-        }
-    }
-
-    public void render()
-    {
-        if(m_states.size() != 0)
-        {
-            m_states.peek().render();
-        }
+        if (!m_states.empty()) m_states.peek().update(delta);
     }
 
     public void push(State state)
@@ -33,14 +22,14 @@ public class StateStacker
 
     public void pop()
     {
-        if(m_states.empty())
+        if (m_states.empty())
         {
             Gdx.app.exit();
             return;
         }
 
         m_states.pop().dispose();
-        if(m_states.empty())
+        if (m_states.empty())
         {
             Gdx.app.exit();
         }

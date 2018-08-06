@@ -1,8 +1,9 @@
 package de.captain.ffxxviii.item.components;
 
+import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.utils.Array;
 import de.captain.ffxxviii.item.Item;
 import de.captain.ffxxviii.item.Items;
-import de.captain.ffxxviii.util.ImmutableArray;
 
 import java.util.Map;
 
@@ -20,7 +21,7 @@ public class Recipe implements ItemComponent
             stacks[index++] = new UnmodifiableItemStack(Items.getItem(key), (Integer) itemsReq.get(keyObject));
         }
 
-        itemReq = new ImmutableArray<>(stacks);
+        itemReq = new ImmutableArray<>(new Array<>(stacks));
     }
 
     public class UnmodifiableItemStack

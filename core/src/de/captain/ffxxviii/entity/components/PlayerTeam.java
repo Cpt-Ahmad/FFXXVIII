@@ -1,7 +1,9 @@
 package de.captain.ffxxviii.entity.components;
 
-import de.captain.ffxxviii.entity.Entity;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.core.Entity;
 
+@Deprecated
 public class PlayerTeam implements Component
 {
     public final Entity melee, ranged, mage;

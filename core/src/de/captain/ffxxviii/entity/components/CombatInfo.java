@@ -1,7 +1,8 @@
 package de.captain.ffxxviii.entity.components;
 
-import de.captain.ffxxviii.entity.type.AttackType;
-import de.captain.ffxxviii.entity.type.Element;
+import com.badlogic.ashley.core.Component;
+import de.captain.ffxxviii.entityold.type.AttackType;
+import de.captain.ffxxviii.entityold.type.Element;
 import de.captain.ffxxviii.item.components.Armor;
 import de.captain.ffxxviii.item.components.Weapon;
 
@@ -107,7 +108,7 @@ public class CombatInfo implements Component
 
     private class Attack
     {
-        boolean m_isFinished = true;
+        boolean    m_isFinished = true;
         int        m_target;
         AttackType m_attack;
 

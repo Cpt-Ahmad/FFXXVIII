@@ -1,6 +1,8 @@
 package de.captain.ffxxviii.entity.components;
 
-import de.captain.ffxxviii.util.ImmutableArray;
+import com.badlogic.ashley.core.Component;
+import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.utils.Array;
 
 public class TileInfo implements Component
 {
@@ -12,7 +14,7 @@ public class TileInfo implements Component
         RERENDER(3);
 
         public final int                     id;
-        public final ImmutableArray<Integer> multipleInfos;
+        public final ImmutableArray<Integer> multipleInfo;
 
         TileInfoType(int id)
         {
@@ -25,7 +27,7 @@ public class TileInfo implements Component
 
             if (infoTypes == null)
             {
-                multipleInfos = null;
+                multipleInfo = null;
             } else
             {
                 Integer[] ids = new Integer[infoTypes.length];
@@ -33,7 +35,7 @@ public class TileInfo implements Component
                 {
                     ids[i] = infoTypes[i].id;
                 }
-                this.multipleInfos = new ImmutableArray<>(ids);
+                this.multipleInfo = new ImmutableArray<>(new Array<>(ids));
             }
         }
 

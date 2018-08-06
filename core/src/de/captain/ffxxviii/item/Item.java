@@ -1,19 +1,23 @@
 package de.captain.ffxxviii.item;
 
+import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.utils.Array;
 import de.captain.ffxxviii.item.components.ItemComponent;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Objects;
 
 public class Item
 {
-    private List<ItemComponent> m_components = new ArrayList<>();
-    public final String identifier;
-    public final String name;
-    public final String type;
-    public final int    value;
+    private final ImmutableArray<ItemComponent> m_components;
+    public final  String                        identifier;
+    public final  String                        name;
+    public final  String                        type;
+    public final  int                           value;
 
 
-    public Item(String identifier, String name, int value, String type, Collection<ItemComponent> components)
+    public Item(String identifier, String name, int value, String type, Array<ItemComponent> components)
     {
         if (identifier == null)
         {
@@ -25,25 +29,7 @@ public class Item
         this.value = value;
         this.type = type;
 
-        for (ItemComponent component : components)
-        {
-            this.add(component);
-        }
-    }
-
-    private void add(ItemComponent newComponent)
-    {
-        ItemComponent component;
-        for (Iterator<ItemComponent> iter = m_components.iterator(); iter.hasNext(); )
-        {
-            component = iter.next();
-            if (component.getClass() == newComponent.getClass())
-            {
-                iter.remove();
-                break;
-            }
-        }
-        m_components.add(newComponent);
+        m_components = new ImmutableArray<>(components);
     }
 
     public <T extends ItemComponent> T get(Class<T> componentClass)

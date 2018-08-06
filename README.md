@@ -1,2 +1,0 @@
-# FFXXVIII
-Final Fantasy Clone?

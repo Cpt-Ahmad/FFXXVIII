@@ -1,5 +1,6 @@
 package de.captain.ffxxviii.entity.components;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import de.captain.ffxxviii.main.WorldMap;
 
@@ -8,6 +9,7 @@ import de.captain.ffxxviii.main.WorldMap;
  * Once movement started the entity is locked and will ignore all following movement inputs until it is finished moving
  * to the desired map location.
  */
+@Deprecated
 public class GridVelocity implements Component
 {
     public enum Direction
@@ -22,8 +24,8 @@ public class GridVelocity implements Component
 
     private boolean m_isLocked    = false;
     private int     m_ticksMoving = 0;
-    private int   m_maxTicksForMovement;
-    private float m_movementSpeed;
+    private int     m_maxTicksForMovement;
+    private float   m_movementSpeed;
 
     private Vector2   m_velocity  = new Vector2();
     private Direction m_direction = Direction.NONE;
@@ -85,7 +87,7 @@ public class GridVelocity implements Component
             return false;
         }
 
-        if(direction == Direction.MOVING)
+        if (direction == Direction.MOVING)
         {
             throw new IllegalArgumentException("The direction cannot be set to MOVING");
         }
@@ -103,7 +105,7 @@ public class GridVelocity implements Component
      */
     public Direction move()
     {
-        if(m_direction == Direction.NONE)
+        if (m_direction == Direction.NONE)
         {
             return Direction.NONE;
         }

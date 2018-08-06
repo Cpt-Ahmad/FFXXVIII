@@ -1,5 +1,6 @@
 package de.captain.ffxxviii.entity.components;
 
+import com.badlogic.ashley.core.Component;
 import de.captain.ffxxviii.item.Item;
 import de.captain.ffxxviii.item.ItemStack;
 import de.captain.ffxxviii.item.components.Recipe;

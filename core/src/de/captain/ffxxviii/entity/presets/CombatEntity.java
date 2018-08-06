@@ -1,6 +1,6 @@
 package de.captain.ffxxviii.entity.presets;
 
-import de.captain.ffxxviii.entity.Entity;
+import com.badlogic.ashley.core.Entity;
 
 public class CombatEntity extends Entity
 {

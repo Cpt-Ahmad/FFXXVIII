@@ -1,6 +1,6 @@
 package de.captain.ffxxviii.item.components;
 
-import de.captain.ffxxviii.entity.type.Element;
+import de.captain.ffxxviii.entityold.type.Element;
 
 public class Weapon implements ItemComponent
 {

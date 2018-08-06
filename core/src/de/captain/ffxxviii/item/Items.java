@@ -1,7 +1,8 @@
 package de.captain.ffxxviii.item;
 
 import com.badlogic.gdx.Gdx;
-import de.captain.ffxxviii.entity.type.Element;
+import com.badlogic.gdx.utils.Array;
+import de.captain.ffxxviii.entityold.type.Element;
 import de.captain.ffxxviii.item.components.ItemComponent;
 import de.captain.ffxxviii.item.components.Recipe;
 import de.captain.ffxxviii.item.components.Weapon;
@@ -21,10 +22,11 @@ public class Items
     {
         Yaml             yaml     = new Yaml();
         Map<String, Map> itemData = yaml.load(Gdx.files.internal("items.yaml").readString());
-        for (String key : itemData.keySet())
+
+        for (String identifier : itemData.keySet())
         {
-            Map itemProperties = itemData.get(key);
-            evaluateItemProperties(key, itemProperties);
+            Map itemProperties = itemData.get(identifier);
+            evaluateItemProperties(identifier, itemProperties);
         }
         Log.debug(Log.Logger.ITEM, s_itemMap.size() + " items loaded");
     }
@@ -94,7 +96,13 @@ public class Items
                 break;
         }
 
-        s_itemMap.put(key, new Item(key, name, value, type, components.values()));
+        Array<ItemComponent> coms = new Array<>();
+        for(ItemComponent com : components.values())
+        {
+            coms.add(com);
+        }
+
+        s_itemMap.put(key, new Item(key, name, value, type, coms));
     }
 
     public static Item getItem(String identifier)

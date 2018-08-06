@@ -55,12 +55,8 @@ public class Interval
      */
     public boolean isInside(int x)
     {
-        if ((x > minimum || (isMinimumInclusive && x == minimum)) &&
-            (x < maximum || (isMaximumInclusive && x == maximum)))
-        {
-            return false;
-        }
-        return true;
+        return (x <= minimum && (!isMinimumInclusive || x != minimum)) ||
+               (x >= maximum && (!isMaximumInclusive || x != maximum));
     }
 
     /**

@@ -1,6 +1,6 @@
 package de.captain.ffxxviii.entity.presets;
 
-import de.captain.ffxxviii.entity.Entity;
+import com.badlogic.ashley.core.Entity;
 import de.captain.ffxxviii.entity.components.CombatInfo;
 import de.captain.ffxxviii.entity.components.Equipment;
 import de.captain.ffxxviii.entity.components.RenderPosition;
@@ -16,7 +16,8 @@ public class PlayerTeamMember extends Entity
         RenderPosition rPos  = new RenderPosition();
         Equipment      equip = new Equipment();
 
-        addComponents(rPos, equip);
+        add(rPos);
+        add(equip);
     }
 
     public Entity melee()
@@ -25,7 +26,10 @@ public class PlayerTeamMember extends Entity
         cInfo.isEnemy = false;
 
         TextureContainer texCon = new TextureContainer(Assets.getTexture(Asset.WARRIOR));
-        addComponents(cInfo, texCon);
+
+        add(cInfo);
+        add(texCon);
+
         return this;
     }
 
@@ -35,7 +39,10 @@ public class PlayerTeamMember extends Entity
         cInfo.isEnemy = false;
 
         TextureContainer texCon = new TextureContainer(Assets.getTexture(Asset.ARCHER));
-        addComponents(cInfo, texCon);
+
+        add(cInfo);
+        add(texCon);
+
         return this;
     }
 
@@ -45,7 +52,10 @@ public class PlayerTeamMember extends Entity
         cInfo.isEnemy = false;
 
         TextureContainer texCon = new TextureContainer(Assets.getTexture(Asset.MAGE));
-        addComponents(cInfo, texCon);
+
+        add(cInfo);
+        add(texCon);
+
         return this;
     }
 }

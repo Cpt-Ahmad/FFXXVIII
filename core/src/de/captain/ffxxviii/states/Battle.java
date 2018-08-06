@@ -1,19 +1,20 @@
 package de.captain.ffxxviii.states;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import de.captain.ffxxviii.entity.Entity;
-import de.captain.ffxxviii.entity.EntityHandler;
-import de.captain.ffxxviii.entity.components.*;
+import de.captain.ffxxviii.entity.components.CombatInfo;
+import de.captain.ffxxviii.entity.components.Equipment;
 import de.captain.ffxxviii.entity.presets.Goblin;
 import de.captain.ffxxviii.entity.presets.SelectionArrow;
 import de.captain.ffxxviii.entity.systems.TextureRenderer;
-import de.captain.ffxxviii.entity.type.AttackType;
+import de.captain.ffxxviii.entityold.type.AttackType;
+import de.captain.ffxxviii.main.Assets;
 import de.captain.ffxxviii.main.StateStacker;
 import de.captain.ffxxviii.util.Log;
 
@@ -22,6 +23,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+@Deprecated
 public class Battle extends State
 {
     private boolean m_shouldUpdateBattlefieldPosition = true;
@@ -32,33 +34,35 @@ public class Battle extends State
     private int m_playerCounter;
     private int m_enemyCounter;
 
-    private final List<Entity> m_entities;
+    private final List<Entity> m_entities = new ArrayList<>();
     private final List<Entity> m_enemiesKilled;
 
     private final Entity m_arrow;
     private final Entity m_player;
     private       Entity m_currentEntity;
 
-    private EntityHandler m_entityHandler = new EntityHandler();
+    private Engine m_engine = new Engine();
 
-    Battle(SpriteBatch batch, ShapeRenderer shapeRenderer, StateStacker stateStacker,
+    Battle(StateStacker stateStacker,
            Entity player)
     {
-        super(batch, shapeRenderer, stateStacker);
-        PlayerTeam playerTeam = player.getComponent(PlayerTeam.class);
+        super(stateStacker);
+        de.captain.ffxxviii.entity.components.PlayerTeam
+                playerTeam = player.getComponent(de.captain.ffxxviii.entity.components.PlayerTeam.class);
         if (playerTeam != null && !playerTeam.isEmpty())
         {
             m_playerCounter = playerTeam.size();
 
             m_enemiesKilled = new ArrayList<>(6);
-            m_entities = m_entityHandler.getEntityList();
+            //m_entities = m_engine.getEntityList();
 
             for (int i = 0; i < playerTeam.all.length; i++)
             {
                 if (playerTeam.all[i] == null) continue;
-                RenderPosition renderPos = playerTeam.all[i].getComponent(RenderPosition.class);
-                CombatInfo     cInfo     = playerTeam.all[i].getComponent(CombatInfo.class);
-                Equipment      equip     = playerTeam.all[i].getComponent(Equipment.class);
+                de.captain.ffxxviii.entity.components.RenderPosition renderPos = playerTeam.all[i].getComponent(
+                        de.captain.ffxxviii.entity.components.RenderPosition.class);
+                CombatInfo cInfo = playerTeam.all[i].getComponent(CombatInfo.class);
+                Equipment  equip = playerTeam.all[i].getComponent(Equipment.class);
 
                 cInfo.applyEquipmentToStats(equip);
                 renderPos.set(50 + (cInfo.isFrontLine ? 75 : 0), 100 + 75 * i);
@@ -66,14 +70,14 @@ public class Battle extends State
 
             m_player = player;
 
-            m_entityHandler.addSystem(new TextureRenderer());
+            m_engine.addSystem(new TextureRenderer());
 
             m_enemyCounter = 4;
 
             m_arrow = new SelectionArrow();
-            m_entityHandler.addEntity(m_arrow);
-            m_entityHandler.addEntities(playerTeam.all);
-            m_entityHandler.addEntities(createEnemyTeam(m_enemyCounter));
+            m_engine.addEntity(m_arrow);
+            //m_engine.addEntities(playerTeam.all);
+            //m_engine.addEntities(createEnemyTeam(m_enemyCounter));
         } else
         {
             throw new IllegalArgumentException("player does not have a team to battle");
@@ -83,7 +87,7 @@ public class Battle extends State
     @Override
     public void update(float delta)
     {
-        m_entityHandler.update();
+        m_engine.update(delta);
 
         // Update the battlefield position of the entities, if necessary
         if (m_shouldUpdateBattlefieldPosition)
@@ -104,31 +108,33 @@ public class Battle extends State
                 // Sets the render position of the selection arrow
                 if (m_cursor == attacker.battlefieldPosition)
                 {
-                    RenderPosition renderPos = entity.getComponent(RenderPosition.class);
-                    m_arrow.getComponent(RenderPosition.class).set(renderPos.x - 32f, renderPos.y);
+                    de.captain.ffxxviii.entity.components.RenderPosition
+                            renderPos = entity.getComponent(de.captain.ffxxviii.entity.components.RenderPosition.class);
+                    m_arrow.getComponent(de.captain.ffxxviii.entity.components.RenderPosition.class)
+                           .set(renderPos.x - 32f, renderPos.y);
                 }
 
                 // is player currently selecting an attack (everything will be frozen in that case)
                 if (!m_isBattleInWaitingMode)
                 {
-                    // Does an entity have an attack selected and enough stamina to use it
+                    // Does an entityold have an attack selected and enough stamina to use it
                     if (attacker.isReadyToAttack())
                     {
                         Entity defender = getEntityByBattlefieldPosition(attacker.getTarget());
-                        if (defender == null) // is the targeted entity already dead?
+                        if (defender == null) // is the targeted entityold already dead?
                         {
                             int newTarget = chooseNewTarget(attacker, attacker.getTarget());
                             defender = getEntityByBattlefieldPosition(newTarget);
-                            if (defender == null) // no entity in the opposing team is alive
+                            if (defender == null) // no entityold in the opposing team is alive
                             {
                                 attacker.setAttackFinished();
                                 continue;
                             }
                         }
                         attack(entity, defender);
-                    } else if (!attacker.isAttackSelected()) // is an attack selected for this entity
+                    } else if (!attacker.isAttackSelected()) // is an attack selected for this entityold
                     {
-                        // Is the entity an enemy -> select an attack and target
+                        // Is the entityold an enemy -> select an attack and target
                         if (attacker.isEnemy)
                         {
                             selectEnemyAttackAgainstPlayer(m_entities, entity);
@@ -139,7 +145,7 @@ public class Battle extends State
                             m_currentEntity = entity;
                             m_isBattleInWaitingMode = true;
                         }
-                    } else // if not in waiting mode, increase stamina of the entity
+                    } else // if not in waiting mode, increase stamina of the entityold
                     {
                         attacker.stamina += attacker.staminaPerSec;
                     }
@@ -147,7 +153,7 @@ public class Battle extends State
             }
         }
 
-        // Remove all dead enemies from the active entity list and add them to the dead enemy list
+        // Remove all dead enemies from the active entityold list and add them to the dead enemy list
         // Additionally reduce the appropriate counter
         for (Iterator<Entity> iterator = m_entities.iterator(); iterator.hasNext(); )
         {
@@ -159,7 +165,7 @@ public class Battle extends State
                 if (cInfo.isEnemy)
                 {
                     m_enemiesKilled.add(entity);
-                    String name = entity.getComponent(Name.class).name;
+                    String name = entity.getComponent(de.captain.ffxxviii.entity.components.Name.class).name;
                     Log.debug(Log.Logger.BATTLE, name + " died.");
                     iterator.remove();
                     m_enemyCounter--;
@@ -173,14 +179,16 @@ public class Battle extends State
         // All enemies are defeated
         if (m_enemyCounter == 0)
         {
-            int       totalExp  = 0;
-            Inventory playerInv = m_player.getComponent(Inventory.class);
+            int totalExp = 0;
+            de.captain.ffxxviii.entity.components.Inventory playerInv = m_player.getComponent(
+                    de.captain.ffxxviii.entity.components.Inventory.class);
             // Get the total exp from the battle and give the player all the loot
             for (Entity entity : m_enemiesKilled)
             {
                 CombatInfo cInfo = entity.getComponent(CombatInfo.class);
                 totalExp += cInfo.experiencePoints;
-                Inventory loot = entity.getComponent(Inventory.class);
+                de.captain.ffxxviii.entity.components.Inventory
+                        loot = entity.getComponent(de.captain.ffxxviii.entity.components.Inventory.class);
                 if (loot != null)
                 {
                     Log.debug(Log.Logger.BATTLE, "Loot: " + loot.toString());
@@ -202,17 +210,18 @@ public class Battle extends State
         m_camera.update();
     }
 
-    @Override
     public void render()
     {
-        m_batch.setProjectionMatrix(m_camera.combined);
-        m_shapeRenderer.setProjectionMatrix(m_camera.combined);
+        Assets.getSpriteBatch().setProjectionMatrix(m_camera.combined);
+        ShapeRenderer shapeRenderer = Assets.getShapeRenderer();
 
-        m_shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        m_shapeRenderer.setColor(Color.GREEN);
-        m_shapeRenderer.rect(0, 0, m_camera.viewportWidth, m_camera.viewportHeight);
-        m_shapeRenderer.end();
-        m_entityHandler.render(m_batch, m_shapeRenderer);
+        shapeRenderer.setProjectionMatrix(m_camera.combined);
+
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.GREEN);
+        shapeRenderer.rect(0, 0, m_camera.viewportWidth, m_camera.viewportHeight);
+        shapeRenderer.end();
+        //m_engine.render(m_batch, shapeRenderer);
     }
 
     @Override
@@ -231,11 +240,11 @@ public class Battle extends State
     {
         if (attackerEntity == null)
         {
-            throw new IllegalArgumentException("The attacking entity cannot be null");
+            throw new IllegalArgumentException("The attacking entityold cannot be null");
         }
         if (defenderEntity == null)
         {
-            throw new IllegalArgumentException("The defending entity cannot be null");
+            throw new IllegalArgumentException("The defending entityold cannot be null");
         }
 
         CombatInfo attacker = attackerEntity.getComponent(CombatInfo.class);
@@ -244,8 +253,11 @@ public class Battle extends State
                 defender.damage(attacker.getAttackDamage() * attacker.strength, attacker.getAttackElement());
         attacker.setAttackFinished();
 
-        Name attackerName = attackerEntity.getComponent(Name.class);
-        Name defenderName = defenderEntity.getComponent(Name.class);
+        de.captain.ffxxviii.entity.components.Name
+                attackerName = attackerEntity.getComponent(
+                de.captain.ffxxviii.entity.components.Name.class);
+        de.captain.ffxxviii.entity.components.Name defenderName = defenderEntity.getComponent(
+                de.captain.ffxxviii.entity.components.Name.class);
 
         String attName = attackerName == null ? "Attacker" : attackerName.name;
         String defName = defenderName == null ? "Defender" : defenderName.name;
@@ -255,8 +267,9 @@ public class Battle extends State
 
         if (!defender.isAlive)
         {
-            Name   nameContainer = defenderEntity.getComponent(Name.class);
-            String name          = nameContainer == null ? "Enemy" : nameContainer.name;
+            de.captain.ffxxviii.entity.components.Name
+                    nameContainer = defenderEntity.getComponent(de.captain.ffxxviii.entity.components.Name.class);
+            String name = nameContainer == null ? "Enemy" : nameContainer.name;
             Log.debug(Log.Logger.BATTLE, name + " died");
 
             m_shouldUpdateBattlefieldPosition = true;
@@ -335,8 +348,11 @@ public class Battle extends State
             {
                 return 0;
             }
-            RenderPosition pos1 = o1.getComponent(RenderPosition.class);
-            RenderPosition pos2 = o2.getComponent(RenderPosition.class);
+            de.captain.ffxxviii.entity.components.RenderPosition
+                    pos1 = o1.getComponent(
+                    de.captain.ffxxviii.entity.components.RenderPosition.class);
+            de.captain.ffxxviii.entity.components.RenderPosition pos2 = o2.getComponent(
+                    de.captain.ffxxviii.entity.components.RenderPosition.class);
 
             if (pos1 == null && pos2 == null)
             {

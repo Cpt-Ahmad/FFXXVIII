@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -15,34 +13,36 @@ import de.captain.ffxxviii.item.ItemStack;
 import de.captain.ffxxviii.main.Assets;
 import de.captain.ffxxviii.main.StateStacker;
 
+@Deprecated
 public class InventoryMenu extends State
 {
     //private final Inventory m_inventory;
 
-    InventoryMenu(SpriteBatch batch, ShapeRenderer shapeRenderer, StateStacker stateStacker,
+    InventoryMenu(StateStacker stateStacker,
                   Inventory inventory)
     {
-        super(batch, shapeRenderer, stateStacker);
+        super(stateStacker);
         //m_inventory = inventory;
 
         final com.badlogic.gdx.scenes.scene2d.ui.List<ItemStack> list =
                 new com.badlogic.gdx.scenes.scene2d.ui.List<>(Assets.getSkin());
         Array<ItemStack> invItems = new Array<>();
-        for(ItemStack stack : inventory.getItemStacks())
+        for (ItemStack stack : inventory.getItemStacks())
         {
             invItems.add(stack);
         }
         list.setItems(invItems);
 
-        final Label typeLabel = new Label("null", Assets.getSkin());
+        final Label typeLabel  = new Label("null", Assets.getSkin());
         final Label valueLabel = new Label("null", Assets.getSkin());
         m_guiHandler.add(list, new ChangeListener()
         {
             @Override
             public void changed(ChangeEvent event, Actor actor)
             {
-                com.badlogic.gdx.scenes.scene2d.ui.List<ItemStack> listActor = (com.badlogic.gdx.scenes.scene2d.ui.List<ItemStack>) actor;
-                ItemStack selected = listActor.getSelected();
+                com.badlogic.gdx.scenes.scene2d.ui.List<ItemStack> listActor =
+                        (com.badlogic.gdx.scenes.scene2d.ui.List<ItemStack>) actor;
+                ItemStack                                          selected  = listActor.getSelected();
 
                 typeLabel.setText("Type: " + selected.item.type);
                 valueLabel.setText("Value: " + selected.item.value);
@@ -58,7 +58,6 @@ public class InventoryMenu extends State
         m_guiHandler.update(delta);
     }
 
-    @Override
     public void render()
     {
         m_guiHandler.render();
@@ -81,7 +80,7 @@ public class InventoryMenu extends State
         @Override
         public boolean keyDown(int keycode)
         {
-            if(keycode == Input.Keys.ESCAPE)
+            if (keycode == Input.Keys.ESCAPE)
             {
                 m_stateStacker.pop();
                 return true;

@@ -28,21 +28,21 @@ public class HashMapWithoutNull<K, V> extends HashMap<K, V>
     @Override
     public V put(K key, V value)
     {
-        if(value == null) throw new IllegalArgumentException("value of this map cannot be null");
+        if (value == null) throw new IllegalArgumentException("value of this map cannot be null");
         return super.put(key, value);
     }
 
     @Override
     public boolean replace(K key, V oldValue, V newValue)
     {
-        if(newValue == null) throw new IllegalArgumentException("value of this map cannot be null");
+        if (newValue == null) throw new IllegalArgumentException("value of this map cannot be null");
         return super.replace(key, oldValue, newValue);
     }
 
     @Override
     public V replace(K key, V value)
     {
-        if(value == null) throw new IllegalArgumentException("value of this map cannot be null");
+        if (value == null) throw new IllegalArgumentException("value of this map cannot be null");
         return super.replace(key, value);
     }
 }

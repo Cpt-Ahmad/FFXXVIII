@@ -1,11 +1,13 @@
 package de.captain.ffxxviii.entity.components;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 
+@Deprecated
 public class RenderPosition implements Component
 {
     /**
-     * The position at which to render the entity
+     * The position at which to render the entityold
      */
     public float x, y;
 
