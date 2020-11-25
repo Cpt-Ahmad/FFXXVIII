@@ -8,6 +8,7 @@ import de.captain.ffxxviii.entity.components.TextureContainer;
 import de.captain.ffxxviii.main.Asset;
 import de.captain.ffxxviii.main.Assets;
 
+@Deprecated
 public class PlayerTeamMember extends Entity
 {
     public PlayerTeamMember()

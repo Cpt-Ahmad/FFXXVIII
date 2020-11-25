@@ -12,18 +12,18 @@ public class Player extends Entity
     public Player()
     {
         TextureContainer texCon    = new TextureContainer(Assets.getTexture(Asset.TEST));
-        GridPosition     gridPos   = new GridPosition();
-        GridVelocity     gridVel   = new GridVelocity(30);
-        RenderPosition   renderPos = new RenderPosition();
+        //GridPosition     gridPos   = new GridPosition();
+        //GridVelocity     gridVel   = new GridVelocity(30);
+        //RenderPosition   renderPos = new RenderPosition();
         CombatInfo       cInfo     = new CombatInfo(true, 5000);
         Name             name      = new Name("Player");
         Inventory        inv       = new Inventory();
         inv.add(Items.getItem("wood"), 10);
         inv.add(Items.getItem("iron"), 14);
-        PlayerTeam playerTeam = new PlayerTeam(new PlayerTeamMember().melee(), new PlayerTeamMember().ranged(),
-                                               new PlayerTeamMember().mage());
+        //PlayerTeam playerTeam = new PlayerTeam(new PlayerTeamMember().melee(), new PlayerTeamMember().ranged(),
+        //                                         new PlayerTeamMember().mage());
         Position pos      = new Position();
-        Velocity velocity = new Velocity(100f);
+        Velocity velocity = new Velocity(300f);
         RectangleX hitboxRect =
                 new RectangleX(pos.positionVector.x, pos.positionVector.y, texCon.texture.getRegionWidth(),
                                texCon.texture.getRegionHeight());
@@ -32,14 +32,14 @@ public class Player extends Entity
 
         add(pos);
         add(velocity);
-        add(gridPos);
-        add(gridVel);
+        //add(gridPos);
+        //add(gridVel);
         add(texCon);
-        add(renderPos);
+        //add(renderPos);
         add(cInfo);
         add(name);
         add(inv);
-        add(playerTeam);
+        //add(playerTeam);
         add(hitbox);
     }
 }

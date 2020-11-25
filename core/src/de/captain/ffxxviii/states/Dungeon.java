@@ -7,7 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import de.captain.ffxxviii.entity.components.Position;
 import de.captain.ffxxviii.entity.components.Velocity;
-import de.captain.ffxxviii.entity.presets.Goblin;
 import de.captain.ffxxviii.entity.systems.MovementSystem;
 import de.captain.ffxxviii.entity.systems.RenderSystem;
 import de.captain.ffxxviii.main.StateStacker;
@@ -42,6 +41,7 @@ public class Dungeon extends State
         Velocity vel = m_player.getComponent(Velocity.class);
         if (vel == null) throw new NullPointerException("the player has to have a velocity component");
         float dx = 0f, dy = 0f;
+
         if (Gdx.input.isKeyPressed(Input.Keys.W)) dy = 1f;
         else if (Gdx.input.isKeyPressed(Input.Keys.S)) dy = -1f;
         if (Gdx.input.isKeyPressed(Input.Keys.A)) dx = -1f;

@@ -3,11 +3,7 @@ package de.captain.ffxxviii.main;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Version;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Shape2D;
 import de.captain.ffxxviii.item.Items;
 import de.captain.ffxxviii.states.MainMenu;
 import de.captain.ffxxviii.util.Log;
@@ -16,6 +12,12 @@ import de.captain.ffxxviii.util.Testing;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/*
+TODO add enemies
+TODO add attacks
+TODO add enemy movement
+ */
 public class MainGameClass extends ApplicationAdapter
 {
     private int m_ticksForFpsPrinting = 0;
